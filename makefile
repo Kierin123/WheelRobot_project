@@ -2,7 +2,7 @@ CFLAGS = -Wall -Wextra -Wpedantic
 CC = gcc
 LDFLAGS = 
 LIBS = -lwiringPi -lpthread
-SOURCES = main.c
+SOURCES = main.c motors.c
 OBJECTS = $(SOURCES:.c=.o)
 EXECUTABLE = program
 
