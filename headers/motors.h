@@ -8,12 +8,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <pthread.h>
 #include <errno.h>
-#include <sys/time.h>
-#include <signal.h>
 
 #include <wiringPi.h>
+#include <softPwm.h>
 
 #define PWM_MOTOR_R_PIN 12
 #define PWM_MOTOR_L_PIN 13
@@ -29,6 +27,11 @@
 #define READ_FIFO_SIZE 100
 #define MOTOR_THREADS_NUM 2
 
+// Magic numbers - experimental develop
+#define TURN_90_DEGREE 150
+#define RIGHT_MOTOR_FACTOR 4
+#define LEFT_MOTOR_FACTOR 0
+
 enum
 {
     BACKWARD = 0,
@@ -37,17 +40,19 @@ enum
     RIGHT = 4,
 };
 
+
+
+
 void motors_init();
 void *motor_command_thread(void *args);
-// void motors_stop();
+void motors_stop();
+void distance_move(int dir, const int dist);
+void speed_move(int dir, const int speed);
+void turn(int dir);
+
 // void motor_right_pwm_set(const int pwm, int dir);
 // void motor_left_pwm_set(const int pwm, int dir);
 
-void init_timer();
 void encoder_read();
-int encoder_read_Right();
-int encoder_read_Left();
-
-
 
 #endif
