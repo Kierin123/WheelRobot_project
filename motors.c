@@ -3,193 +3,147 @@
 int motor_R_position = 0;
 int motor_L_position = 0;
 
-// const char motor_fifo_name[] = "./fifo_command";
-// pthread_t motor_threads[MOTOR_THREADS_NUM];
-// int thread_args[MOTOR_THREADS_NUM];
-
-
-
-static void motor_left_pwm_set(const int pwm, int dir)
+void _motor_init(Tmotor *_motor, int pwm_pin, int enable_pin, int fault_pin, int dir_pin, Tencoder *_enc,
+                 int encoder_pin_a, int encoder_pin_b)
 {
-    digitalWrite(DIR_MOTOR_L_PIN, !dir);
-    pwmWrite(PWM_MOTOR_L_PIN, pwm + LEFT_MOTOR_FACTOR);
-    digitalWrite(EN_MOTORS_PIN, LOW);
+    pinMode(pwm_pin, PWM_OUTPUT);
+    _motor->pwm_pin = pwm_pin;
+
+    pinMode(dir_pin, OUTPUT);
+    _motor->dir_pin = dir_pin;
+
+    pinMode(enable_pin, OUTPUT);
+    _motor->enable_pin = enable_pin;
+
+    pinMode(fault_pin, INPUT);
+    _motor->fault_pin = fault_pin;
+
+    pinMode(encoder_pin_a, INPUT);
+
+    _enc->a_input_pin = encoder_pin_a;
+    pinMode(encoder_pin_b, INPUT);
+    _enc->b_input_pin = encoder_pin_b;
+    _enc->counter = 0;
+    _enc->last_read = 0;
+
+    _motor->encoder = _enc;
 }
 
-static void motor_right_pwm_set(const int pwm, int dir)
+int _encoder_read(Tencoder *_enc)
 {
-    digitalWrite(DIR_MOTOR_R_PIN, dir);
-    pwmWrite(PWM_MOTOR_R_PIN, pwm + RIGHT_MOTOR_FACTOR);
-    digitalWrite(EN_MOTORS_PIN, LOW);
+
+    unsigned char current_read = 0;
+    
+
+    current_read = ((digitalRead(_enc->a_input_pin) << 1) + (digitalRead(_enc->b_input_pin))) & 0x03;
+
+    if ((_enc->last_read & 0x03) != current_read)
+    {
+        _enc->last_read = (_enc->last_read << 2) | current_read;
+
+        if (_enc->last_read == 0x4B || _enc->last_read == 0x87)
+        {
+
+            if (_enc->last_read == 0x4B)
+            {
+                _enc->counter++;
+            }
+            else
+            {
+                _enc->counter--;
+            }
+        }
+    }
+    return _enc->counter;
 }
 
- void motors_stop()
+void _set_speed(Tmotor *_motor, int speed, int dir)
 {
-    digitalWrite(EN_MOTORS_PIN, HIGH);
-    pwmWrite(PWM_MOTOR_L_PIN, 0);
-    pwmWrite(PWM_MOTOR_R_PIN, 0);
+    digitalWrite(_motor->dir_pin, dir);
+    pwmWrite(_motor->pwm_pin, speed + LEFT_MOTOR_FACTOR);
+    digitalWrite(_motor->enable_pin, LOW);
 }
 
-
- void speed_move(int dir, const int speed)
+void _stop_motor(Tmotor *_motor)
 {
-
-    motor_left_pwm_set(speed, dir);
-    motor_right_pwm_set(speed, dir);
+    pwmWrite(_motor->pwm_pin, 0);
+    digitalWrite(_motor->enable_pin, HIGH);
 }
 
- void distance_move(int dir, const int dist)
+void _speed_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int speed)
 {
-    encoder_read();
+    _set_speed(_motor_l, speed, !dir);
+    _set_speed(_motor_r, speed, dir);
+}
+
+void _distance_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int dist)
+{
+
+    _encoder_read(_motor_l->encoder);
+    _encoder_read(_motor_r->encoder);
+
     static int last_position = 0;
-    int actual_posision_mm = (int)(motor_L_position + motor_R_position) * 61 / 200;
-    motor_left_pwm_set(250, dir);
-    motor_right_pwm_set(250, dir);
+    int actual_posision_mm = (int)(_motor_l->encoder->counter + _motor_r->encoder->counter) * DISTANCE_ENC_FACTOR;
+
+    _speed_move(_motor_l, _motor_r, dir, 250);
+
     if (dir == FORWARD)
     {
-        while (actual_posision_mm <= (dist + last_position))
+        while (actual_posision_mm <= (last_position + dist))
         {
-            encoder_read();
-            actual_posision_mm = (int)(motor_L_position + motor_R_position) * 61 / 200;
+            _encoder_read(_motor_r->encoder);
+            _encoder_read(_motor_l->encoder);
+            
+
+            actual_posision_mm = (int)(_motor_l->encoder->counter + _motor_r->encoder->counter) * DISTANCE_ENC_FACTOR;
         }
     }
     if (dir == BACKWARD)
     {
         while (actual_posision_mm >= (last_position - dist))
         {
-            encoder_read();
-            actual_posision_mm = (int)(motor_L_position + motor_R_position) * 61 / 200;
+            _encoder_read(_motor_r->encoder);
+            _encoder_read(_motor_l->encoder);
+            
+            actual_posision_mm = (int)(_motor_l->encoder->counter + _motor_r->encoder->counter) * DISTANCE_ENC_FACTOR;
         }
     }
 
     last_position = actual_posision_mm;
-    motors_stop();
+    _stop_motor(_motor_r);
+    _stop_motor(_motor_l);
 }
 
- void turn(int dir)
+void _turn(Tmotor *_motor_l, Tmotor *_motor_r, int dir)
 {
     if (dir == RIGHT || dir == LEFT)
     {
-        encoder_read();
-        int last_R_position = motor_R_position;
-        int last_L_position = motor_L_position;
+        _encoder_read(_motor_l->encoder);
+        _encoder_read(_motor_r->encoder);
+        int last_R_position = _motor_r->encoder->counter;
+        int last_L_position = _motor_l->encoder->counter;
 
-        int angle = 0;
-        motor_left_pwm_set(250, !(dir & 0x01));
-        motor_right_pwm_set(250, (dir & 0x02));
-        if (dir == RIGHT)
+        // int angle = 0;
+        _set_speed(_motor_l, 250, (dir & 0x01));
+        _set_speed(_motor_r, 250, (dir & 0x02));
+
+        if (dir == LEFT)
         {
-
-            while (motor_L_position < (last_L_position + TURN_90_DEGREE))
+            while (_motor_r->encoder->counter < (last_R_position + TURN_90_DEGREE))
             {
-                encoder_read();
+                _encoder_read(_motor_r->encoder);
             }
         }
         else
         {
-
-            while (motor_R_position < (last_R_position + TURN_90_DEGREE))
+            while (_motor_l->encoder->counter < (last_L_position + TURN_90_DEGREE))
             {
-                encoder_read();
+                _encoder_read(_motor_l->encoder);
             }
         }
     }
 
-    motors_stop();
+    _stop_motor(_motor_r);
+    _stop_motor(_motor_l);
 }
 
-
-
-static int encoder_read_Left()
-{
-    static int counter = 0;
-    unsigned char current_read_left = 0;
-    // unsigned char current_read_right = 0;
-    static unsigned char last_read_left;
-    // static unsigned char last_read_right;
-
-    current_read_left = ((digitalRead(ENC_L_OUTPUT_A) << 1) + (digitalRead(ENC_L_OUTPUT_B))) & 0x03;
-
-    if ((last_read_left & 0x03) != current_read_left)
-    {
-        last_read_left = (last_read_left << 2) | current_read_left;
-        // printf("LAST: %d/n", last_read_left);
-        if (last_read_left == 0x4B || last_read_left == 0x87)
-        {
-
-            if (last_read_left == 0x4B)
-            {
-                counter++;
-            }
-            else
-            {
-                counter--;
-            }
-        }
-    }
-    return counter;
-}
-
-static int encoder_read_Right()
-{
-    static int counter = 0;
-    // unsigned char current_read_left = 0;
-    unsigned char current_read_right = 0;
-    // static unsigned char last_read_left;
-    static unsigned char last_read_right;
-
-    current_read_right = ((digitalRead(ENC_R_OUTPUT_A) << 1) + (digitalRead(ENC_R_OUTPUT_B))) & 0x03;
-
-    if ((last_read_right & 0x03) != current_read_right)
-    {
-        last_read_right = (last_read_right << 2) | current_read_right;
-        // printf("LAST: %d/n", last_read_left);
-        if (last_read_right == 0x4B || last_read_right == 0x87)
-        {
-
-            if (last_read_right == 0x4B)
-            {
-                counter++;
-            }
-            else
-            {
-                counter--;
-            }
-        }
-    }
-
-    return counter;
-}
-
-void encoder_read()
-{
-    motor_L_position = encoder_read_Left();
-    motor_R_position = encoder_read_Right();
-}
-
-
-
-void motors_init()
-{
-
-    wiringPiSetupGpio();
-
-    pinMode(PWM_MOTOR_R_PIN, PWM_OUTPUT);
-    pinMode(PWM_MOTOR_L_PIN, PWM_OUTPUT);
-
-    pinMode(DIR_MOTOR_R_PIN, OUTPUT);
-    pinMode(DIR_MOTOR_L_PIN, OUTPUT);
-
-    pinMode(EN_MOTORS_PIN, OUTPUT);
-    pinMode(FAULT_MOTORS_PIN, INPUT);
-
-    pinMode(ENC_R_OUTPUT_A, INPUT);
-    pinMode(ENC_L_OUTPUT_A, INPUT);
-    pinMode(ENC_R_OUTPUT_B, INPUT);
-    pinMode(ENC_L_OUTPUT_B, INPUT);
-
-    
-   
-    //pthread_create(&motor_threads[0], NULL, motor_command_thread, &thread_args);
-   // pthread_join(motor_threads[0], NULL);
-}

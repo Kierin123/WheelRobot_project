@@ -2,16 +2,13 @@
 #define MOTORS_H
 
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
-
 #include <wiringPi.h>
-#include <softPwm.h>
+
+
+// #########################################
+//          "Pin configuration"
+// set pins according to electronic diagram
+// #########################################
 
 #define PWM_MOTOR_R_PIN 12
 #define PWM_MOTOR_L_PIN 13
@@ -24,35 +21,53 @@
 #define ENC_L_OUTPUT_A 26
 #define ENC_L_OUTPUT_B 20
 
-#define READ_FIFO_SIZE 100
-#define MOTOR_THREADS_NUM 2
+// Magic numbers - experimental developed
+#define TURN_90_DEGREE 165
+#define DISTANCE_ENC_FACTOR 65 / 200 
 
-// Magic numbers - experimental develop
-#define TURN_90_DEGREE 150
 #define RIGHT_MOTOR_FACTOR 4
 #define LEFT_MOTOR_FACTOR 0
 
 enum
 {
-    BACKWARD = 0,
-    FORWARD = 1,
-    LEFT = 3,
-    RIGHT = 4,
+
+    BACKWARD =  0,
+    FORWARD =   1,
+    LEFT =      3,
+    RIGHT =     4,
 };
 
+typedef struct
+{
+    int             a_input_pin;
+    int             b_input_pin;
 
+    int             counter;
+    unsigned char   last_read;
 
+} Tencoder;
 
-void motors_init();
-void *motor_command_thread(void *args);
-void motors_stop();
-void distance_move(int dir, const int dist);
-void speed_move(int dir, const int speed);
-void turn(int dir);
+typedef struct
+{
+    int         pwm_pin;
+    int         enable_pin;
+    int         fault_pin;
+    int         dir_pin;
 
-// void motor_right_pwm_set(const int pwm, int dir);
-// void motor_left_pwm_set(const int pwm, int dir);
+    int         speed;
+    int         state;
 
-void encoder_read();
+    Tencoder    *encoder;
+
+} Tmotor;
+
+void _motor_init(Tmotor *_motor, int pwm_pin, int enable_pin, int fault_pin, int dir_pin, Tencoder *_enc,
+                 int encoder_pin_a, int encoder_pin_b);
+int _encoder_read(Tencoder *_enc);
+void _set_speed(Tmotor *_motor, int speed, int dir);
+void _stop_motor(Tmotor *_motor);
+void _speed_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int speed);
+void _distance_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int dist);
+void _turn(Tmotor *_motor_l, Tmotor *_motor_r, int dir);
 
 #endif
