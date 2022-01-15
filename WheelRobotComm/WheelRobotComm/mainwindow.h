@@ -28,6 +28,8 @@ private slots:
 
     void on_pushButtonSend_clicked();
 
+    void on_pushButtonSearch_clicked();
+
 private:
     Ui::MainWindow *ui;
     Client *client;

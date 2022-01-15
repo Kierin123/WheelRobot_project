@@ -22,7 +22,7 @@ Client::Client( const QString _HostAddr,
 
 void Client::ClientConnect()
 {
-    timeoutConnection->start(5000);
+    timeoutConnection->start(300);
 
     SocketDesc->connectToHost(HostAddr,PortNum);
 
@@ -54,31 +54,69 @@ void Client::ReadyToRead()
 {
 
     QDataStream input(SocketDesc);
+    char single_char[30];
+    QString msg;
+    qint64 numberOfBytes = SocketDesc->bytesAvailable();
+
+    if(numberOfBytes > 0)
+    {
+        input.readRawData(single_char,numberOfBytes);
+        msg.append(single_char);
+    }
+    emit ReadDone(msg);
+//    if(SocketDesc->bytesAvailable())
+//    {
+//        input.readRawData(single_char,1);
+//        msg.append(*single_char);
+
+//        if(*single_char == '\n')
+//        {
+//            emit ReadDone(QString(msg));
+//        }
+//    }
+
 
     //in.setVersion(QDataStream::Qt_5_10);
-    while(1)
-    {
-        if (!NextBlockSize)
-        {
-            if (SocketDesc->bytesAvailable() < sizeof(uint16_t)) { break; }
-            input >> NextBlockSize;
-        }
+    //    while(1)
+    //    {
+    //        if (!NextBlockSize)
+    //        {
+    //            if (SocketDesc->bytesAvailable() < sizeof(uint16_t)) { break; }
+    //            input >> NextBlockSize;
+    //        }
 
-        if (SocketDesc->bytesAvailable() < NextBlockSize) { break; }
+    //        if (SocketDesc->bytesAvailable() < NextBlockSize) { break; }
 
-        QString str;
-        input >> str;
 
-        if (str == "0")
-        {
-            str = "Connection closed";
-            ClientDisconnect();
-        }
+    //       char msg[4];
+    //        input.readRawData(msg, 4);
+    //  QString str(msg);
+    //        //input >> str;
 
-        emit ReadDone(str);
-        NextBlockSize = 0;
-    }
+    //        if (str == "0")
+    //        {
+    //            str = "Connection closed";
+    //            ClientDisconnect();
+    //        }
 
+    //        emit ReadDone( str);
+    //        NextBlockSize = 0;
+    //    }
+
+}
+
+bool Client::SetIP(QString _ip)
+{
+
+    ConnectionStatus = false;
+
+    HostAddr = _ip;
+
+    SocketDesc = new QTcpSocket(this);
+
+    connect(SocketDesc, &QTcpSocket::disconnected, this, &Client::ClientDisconnect);
+
+    return 0;
 }
 
 
@@ -94,16 +132,16 @@ void Client::ClientDisconnect()
     bool shouldEmit = false;
     switch (SocketDesc->state())
     {
-        case QAbstractSocket::UnconnectedState:
-            SocketDesc->disconnectFromHost();
-            shouldEmit = true;
-            break;
-        case QAbstractSocket::ConnectingState:
-            SocketDesc->abort();
-            shouldEmit = true;
-            break;
-        default:
-            SocketDesc->abort();
+    case QAbstractSocket::UnconnectedState:
+        SocketDesc->disconnectFromHost();
+        shouldEmit = true;
+        break;
+    case QAbstractSocket::ConnectingState:
+        SocketDesc->abort();
+        shouldEmit = true;
+        break;
+    default:
+        SocketDesc->abort();
     }
 
     if (shouldEmit)

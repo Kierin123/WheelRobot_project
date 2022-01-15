@@ -8,31 +8,35 @@
 #include <fcntl.h>
 
 #define CHAR_IN_MESSAGE 30
-
-// void connection_handler(void *);
+#define CHAR_IN_ANSWER 2
 
 void connection_handler(void *socket_desc)
 {
 	const char motor_fifo_name[] = "/home/pi/motor/fifo_command";
+	const char read_fifo_name[] = "/home/pi/motor/fifo_answer";
 
 	// Get the socket descriptor
 	int _socket_desc = *(int *)socket_desc;
 	int read_size;
-	char *message, client_message[CHAR_IN_MESSAGE];
+	char *message, client_message[CHAR_IN_MESSAGE], client_asnwer[CHAR_IN_ANSWER];
 
-	int fifo_desc = open(motor_fifo_name, O_WRONLY);
+	int fifo_desc = open(motor_fifo_name, O_WRONLY); //O_WRONLY
+	int read_desc = open(read_fifo_name, O_RDONLY);	 //O_WRONLY
 
 	// Send some messages to the client
-	message = "Greetings! I am your connection handler\n";
+	message = "Connection accepted.\n";
 	write(_socket_desc, message, strlen(message));
 
 	// Receive a message from client
 	while ((read_size = recv(_socket_desc, client_message, CHAR_IN_MESSAGE, 0)) > 0)
 	{
-		// Send the message back to client
-		printf("%s\n",client_message);
 		write(fifo_desc, client_message, strlen(client_message));
-		for (size_t i = 0; i < strlen(client_message); i++)
+		read(read_desc, client_asnwer, CHAR_IN_ANSWER);
+
+		message = "Done\n";
+		write(_socket_desc, message, strlen(message));
+
+		for (size_t i = 0; i < CHAR_IN_MESSAGE; i++)
 		{
 			client_message[i] = '\0';
 		}
@@ -65,7 +69,6 @@ int main(int argc, char *argv[])
 	{
 		port = atoi(argv[1]);
 	}
-	
 
 	// Create socket
 	socket_desc = socket(AF_INET, SOCK_STREAM, 0);
@@ -82,7 +85,7 @@ int main(int argc, char *argv[])
 	// Bind
 	if (bind(socket_desc, (struct sockaddr *)&server, sizeof(server)) < 0)
 	{
-		puts("bind failed");
+		printf("bind failed");
 		return 1;
 	}
 	puts("bind done");
@@ -93,22 +96,24 @@ int main(int argc, char *argv[])
 	// Accept and incoming connection
 	puts("Waiting for incoming connections...");
 	c = sizeof(struct sockaddr_in);
-	while ((new_socket = accept(socket_desc, (struct sockaddr *)&client, (socklen_t *)&c)))
+	while (1)
 	{
-		puts("Connection accepted");
+		while ((new_socket = accept(socket_desc, (struct sockaddr *)&client, (socklen_t *)&c)))
+		{
+			puts("Connection accepted");
 
-		// Reply to the client
-		message = "Hello Client , I have received your connection. And now I will assign a handler for you\n";
-		write(new_socket, message, strlen(message));
+			// Reply to the client
+			message = "Hello Client , I have received your connection.";
+			write(new_socket, message, strlen(message));
 
-		new_sock = malloc(1);
-		*new_sock = new_socket;
+			new_sock = malloc(1);
+			*new_sock = new_socket;
 
-		connection_handler(new_sock);
+			connection_handler(new_sock);
 
-		puts("Handler assigned");
+			puts("Handler assigned");
+		}
 	}
-
 	if (new_socket < 0)
 	{
 		perror("accept failed");

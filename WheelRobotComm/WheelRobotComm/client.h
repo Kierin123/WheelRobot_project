@@ -22,6 +22,7 @@ public:
 
     QTcpSocket *SocketDesc;
     bool GetStatus();
+    bool SetIP(QString _ip);
 
 signals:
     void StatusChanged(bool);

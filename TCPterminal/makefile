@@ -4,17 +4,22 @@ LDFLAGS =
 LIBS = -lpthread
 SOURCES = main.c
 OBJECTS = $(SOURCES:.c=.o)
-EXECUTABLE = program
+EXECUTABLE = TCPServer_runner
 
 #Rule which build all project
 all: clean $(OBJECTS)
-	$(CC) $(OBJECTS) -o $(EXECUTABLE) $(LIBS)
+        $(CC) $(OBJECTS) -o $(EXECUTABLE) $(LIBS)
 
 #Rule to build obj files
 $(OBJECTS): 
-	$(CC) -c $(CFLAGS) $(SOURCES) 
+        $(CC) -c $(CFLAGS) $(SOURCES) 
 
 #Rule to clean
 clean: 
-	rm -f $(OBJECTS)
-	rm -f $(EXECUTABLE)
+        rm -f $(OBJECTS)
+        rm -f $(EXECUTABLE)
+
+
+
+
+

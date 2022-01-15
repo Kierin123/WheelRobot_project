@@ -6,8 +6,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->pushButtonDisconnect->setVisible(false);
+    ui->pushButtonConnect->setVisible(true);
 
-    client = new Client("localhost", 5050);
+    client = new Client("192.168.2.100", 5050);
 
     connect(client, &Client::ReadDone, this, &MainWindow::ReceivedData);
     connect(client, &Client::StatusChanged, this, &MainWindow::LabelStatusChange);
@@ -47,20 +49,20 @@ void MainWindow::GotError(QAbstractSocket::SocketError error)
     QString strError = "unknown";
     switch (error)
     {
-        case 0:
-            strError = "Connection was refused";
-            break;
-        case 1:
-            strError = "Remote host closed the connection";
-            break;
-        case 2:
-            strError = "Host address was not found";
-            break;
-        case 5:
-            strError = "Connection timed out";
-            break;
-        default:
-            strError = "Unknown error";
+    case 0:
+        strError = "Connection was refused";
+        break;
+    case 1:
+        strError = "Remote host closed the connection";
+        break;
+    case 2:
+        strError = "Host address was not found";
+        break;
+    case 5:
+        strError = "Connection timed out";
+        break;
+    default:
+        strError = "Unknown error";
     }
 
     ui->textEditComm->append(strError);
@@ -80,12 +82,46 @@ void MainWindow::on_pushButtonDisconnect_clicked()
 
 void MainWindow::on_pushButtonSend_clicked()
 {
-    QByteArray arrBlock;
-    QDataStream output(&arrBlock, QIODevice::WriteOnly);
+    QString str = ui->lineEditSend->text();
+    QDataStream output(client->SocketDesc);
 
-    output << quint16(0) << ui->lineEditSend->text();
+    output.writeRawData(str.toStdString().c_str(), 30);
 
-    output.device()->seek(0);
-    output << quint16(arrBlock.size() - sizeof (quint16));
-    client->SocketDesc->write(arrBlock);
+//    ui->textEditComm->append(QString("Send!"));
+
+}
+
+void MainWindow::on_pushButtonSearch_clicked()
+{
+    quint8 _ipNumber = 0;
+    QString received_message;
+
+    QString _ip = ui->lineEditIP->text() + "." \
+            + ui->lineEditIP_2->text() + "." + ui->lineEditIP_3->text() \
+            + "." + QString::number(_ipNumber);
+
+
+    client->SetIP(_ip);
+    while(_ipNumber < 255)
+    {
+        client->ClientConnect();
+        if(client->GetStatus() == true)
+        {
+            ui->labelSearch->setText(_ip);
+            break;
+        }
+
+        _ipNumber++;
+        QString _ip = ui->lineEditIP->text() + "." \
+                + ui->lineEditIP_2->text() + "." + ui->lineEditIP_3->text() \
+                + "." + QString::number(_ipNumber);
+
+
+        client->SetIP(_ip);
+
+    }
+
+    client->ClientDisconnect();
+
+
 }
