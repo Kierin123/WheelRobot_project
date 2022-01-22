@@ -12,16 +12,18 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTextEdit>
-#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -31,44 +33,44 @@ class Ui_MainWindow
 public:
     QAction *actionConnectClick;
     QWidget *centralwidget;
-    QPushButton *pushButtonConnect;
-    QTextEdit *textEditComm;
-    QLineEdit *lineEditIP;
-    QLineEdit *lineEditPort;
+    QWidget *formLayoutWidget;
+    QFormLayout *formLayout;
+    QLabel *labelPort_2;
+    QLineEdit *lineEditForwardDisctance;
+    QPushButton *pushButtonForwardDistance;
+    QLineEdit *lineEditBackwardDistance;
+    QPushButton *pushButtonBackwardDistance;
+    QLineEdit *lineEditForwardSpeed;
+    QPushButton *pushButtonForwardSpeed;
+    QLineEdit *lineEditBackwardSpeed;
+    QPushButton *pushButtonBackwardSpeed;
+    QPushButton *pushButtonTurnLeft;
+    QPushButton *pushButtonTurnRight;
+    QLineEdit *lineEditMotorRight;
+    QPushButton *pushButtonMotorRight;
+    QLineEdit *lineEditMotorLeft;
+    QPushButton *pushButtonMotorLeft;
+    QPushButton *pushButtonStop;
+    QWidget *gridLayoutWidget;
+    QGridLayout *gridLayout;
     QPushButton *pushButtonDisconnect;
-    QLabel *labelIP;
-    QLabel *labelPort;
-    QLabel *labelStatus;
-    QLineEdit *lineEditSend;
-    QPushButton *pushButtonSend;
-    QPushButton *pushButtonSearch;
-    QLineEdit *lineEditIP_2;
-    QLineEdit *lineEditIP_3;
-    QLineEdit *lineEditIP_4;
+    QHBoxLayout *horizontalLayout_3;
     QLabel *labelSearch;
-    QWidget *horizontalLayoutWidget;
+    QListWidget *listWidget;
+    QTextEdit *textEditComm;
+    QLabel *labelStatus;
+    QLabel *labelPort_3;
+    QHBoxLayout *horizontalLayout_2;
+    QLabel *labelPort;
+    QLineEdit *lineEditPort;
+    QPushButton *pushButtonConnect;
+    QPushButton *pushButtonSend_2;
+    QPushButton *pushButtonSend;
+    QLineEdit *lineEditSend;
     QHBoxLayout *horizontalLayout;
-    QVBoxLayout *verticalLayout_2;
-    QLineEdit *lineEdit_2;
-    QLineEdit *lineEdit_3;
-    QLineEdit *lineEdit_5;
-    QLineEdit *lineEdit_4;
-    QLineEdit *lineEdit_6;
-    QLineEdit *lineEdit;
-    QLineEdit *lineEdit_8;
-    QLineEdit *lineEdit_7;
-    QSpacerItem *horizontalSpacer;
-    QVBoxLayout *verticalLayout;
-    QPushButton *pushButton_3;
-    QPushButton *pushButton_2;
-    QPushButton *pushButton_5;
-    QPushButton *pushButton_8;
-    QPushButton *pushButton_4;
-    QPushButton *pushButton;
-    QPushButton *pushButton_6;
-    QPushButton *pushButton_7;
-    QPushButton *pushButton_9;
-    QPushButton *pushButton_10;
+    QLabel *labelIP;
+    QSpacerItem *horizontalSpacer_4;
+    QLineEdit *lineEditIP1;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -76,185 +78,214 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(835, 600);
+        MainWindow->resize(853, 604);
         actionConnectClick = new QAction(MainWindow);
         actionConnectClick->setObjectName(QString::fromUtf8("actionConnectClick"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        pushButtonConnect = new QPushButton(centralwidget);
-        pushButtonConnect->setObjectName(QString::fromUtf8("pushButtonConnect"));
-        pushButtonConnect->setGeometry(QRect(10, 10, 91, 27));
-        pushButtonConnect->setMaximumSize(QSize(91, 16777215));
-        textEditComm = new QTextEdit(centralwidget);
-        textEditComm->setObjectName(QString::fromUtf8("textEditComm"));
-        textEditComm->setGeometry(QRect(10, 90, 151, 331));
-        lineEditIP = new QLineEdit(centralwidget);
-        lineEditIP->setObjectName(QString::fromUtf8("lineEditIP"));
-        lineEditIP->setGeometry(QRect(150, 10, 31, 27));
-        lineEditPort = new QLineEdit(centralwidget);
-        lineEditPort->setObjectName(QString::fromUtf8("lineEditPort"));
-        lineEditPort->setGeometry(QRect(150, 40, 151, 27));
-        pushButtonDisconnect = new QPushButton(centralwidget);
+        formLayoutWidget = new QWidget(centralwidget);
+        formLayoutWidget->setObjectName(QString::fromUtf8("formLayoutWidget"));
+        formLayoutWidget->setGeometry(QRect(620, 0, 222, 331));
+        formLayout = new QFormLayout(formLayoutWidget);
+        formLayout->setObjectName(QString::fromUtf8("formLayout"));
+        formLayout->setHorizontalSpacing(6);
+        formLayout->setContentsMargins(0, 0, 0, 0);
+        labelPort_2 = new QLabel(formLayoutWidget);
+        labelPort_2->setObjectName(QString::fromUtf8("labelPort_2"));
+
+        formLayout->setWidget(0, QFormLayout::LabelRole, labelPort_2);
+
+        lineEditForwardDisctance = new QLineEdit(formLayoutWidget);
+        lineEditForwardDisctance->setObjectName(QString::fromUtf8("lineEditForwardDisctance"));
+        lineEditForwardDisctance->setMaxLength(3);
+
+        formLayout->setWidget(1, QFormLayout::LabelRole, lineEditForwardDisctance);
+
+        pushButtonForwardDistance = new QPushButton(formLayoutWidget);
+        pushButtonForwardDistance->setObjectName(QString::fromUtf8("pushButtonForwardDistance"));
+
+        formLayout->setWidget(1, QFormLayout::FieldRole, pushButtonForwardDistance);
+
+        lineEditBackwardDistance = new QLineEdit(formLayoutWidget);
+        lineEditBackwardDistance->setObjectName(QString::fromUtf8("lineEditBackwardDistance"));
+        lineEditBackwardDistance->setMaxLength(3);
+
+        formLayout->setWidget(2, QFormLayout::LabelRole, lineEditBackwardDistance);
+
+        pushButtonBackwardDistance = new QPushButton(formLayoutWidget);
+        pushButtonBackwardDistance->setObjectName(QString::fromUtf8("pushButtonBackwardDistance"));
+
+        formLayout->setWidget(2, QFormLayout::FieldRole, pushButtonBackwardDistance);
+
+        lineEditForwardSpeed = new QLineEdit(formLayoutWidget);
+        lineEditForwardSpeed->setObjectName(QString::fromUtf8("lineEditForwardSpeed"));
+        lineEditForwardSpeed->setMaxLength(3);
+
+        formLayout->setWidget(3, QFormLayout::LabelRole, lineEditForwardSpeed);
+
+        pushButtonForwardSpeed = new QPushButton(formLayoutWidget);
+        pushButtonForwardSpeed->setObjectName(QString::fromUtf8("pushButtonForwardSpeed"));
+
+        formLayout->setWidget(3, QFormLayout::FieldRole, pushButtonForwardSpeed);
+
+        lineEditBackwardSpeed = new QLineEdit(formLayoutWidget);
+        lineEditBackwardSpeed->setObjectName(QString::fromUtf8("lineEditBackwardSpeed"));
+        lineEditBackwardSpeed->setMaxLength(3);
+
+        formLayout->setWidget(4, QFormLayout::LabelRole, lineEditBackwardSpeed);
+
+        pushButtonBackwardSpeed = new QPushButton(formLayoutWidget);
+        pushButtonBackwardSpeed->setObjectName(QString::fromUtf8("pushButtonBackwardSpeed"));
+
+        formLayout->setWidget(4, QFormLayout::FieldRole, pushButtonBackwardSpeed);
+
+        pushButtonTurnLeft = new QPushButton(formLayoutWidget);
+        pushButtonTurnLeft->setObjectName(QString::fromUtf8("pushButtonTurnLeft"));
+
+        formLayout->setWidget(5, QFormLayout::FieldRole, pushButtonTurnLeft);
+
+        pushButtonTurnRight = new QPushButton(formLayoutWidget);
+        pushButtonTurnRight->setObjectName(QString::fromUtf8("pushButtonTurnRight"));
+
+        formLayout->setWidget(6, QFormLayout::FieldRole, pushButtonTurnRight);
+
+        lineEditMotorRight = new QLineEdit(formLayoutWidget);
+        lineEditMotorRight->setObjectName(QString::fromUtf8("lineEditMotorRight"));
+        lineEditMotorRight->setMaxLength(3);
+
+        formLayout->setWidget(7, QFormLayout::LabelRole, lineEditMotorRight);
+
+        pushButtonMotorRight = new QPushButton(formLayoutWidget);
+        pushButtonMotorRight->setObjectName(QString::fromUtf8("pushButtonMotorRight"));
+
+        formLayout->setWidget(7, QFormLayout::FieldRole, pushButtonMotorRight);
+
+        lineEditMotorLeft = new QLineEdit(formLayoutWidget);
+        lineEditMotorLeft->setObjectName(QString::fromUtf8("lineEditMotorLeft"));
+        lineEditMotorLeft->setMaxLength(3);
+        lineEditMotorLeft->setFrame(true);
+
+        formLayout->setWidget(8, QFormLayout::LabelRole, lineEditMotorLeft);
+
+        pushButtonMotorLeft = new QPushButton(formLayoutWidget);
+        pushButtonMotorLeft->setObjectName(QString::fromUtf8("pushButtonMotorLeft"));
+
+        formLayout->setWidget(8, QFormLayout::FieldRole, pushButtonMotorLeft);
+
+        pushButtonStop = new QPushButton(formLayoutWidget);
+        pushButtonStop->setObjectName(QString::fromUtf8("pushButtonStop"));
+
+        formLayout->setWidget(9, QFormLayout::FieldRole, pushButtonStop);
+
+        gridLayoutWidget = new QWidget(centralwidget);
+        gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
+        gridLayoutWidget->setGeometry(QRect(0, 0, 615, 541));
+        gridLayout = new QGridLayout(gridLayoutWidget);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout->setContentsMargins(0, 0, 0, 0);
+        pushButtonDisconnect = new QPushButton(gridLayoutWidget);
         pushButtonDisconnect->setObjectName(QString::fromUtf8("pushButtonDisconnect"));
-        pushButtonDisconnect->setGeometry(QRect(10, 40, 91, 27));
-        labelIP = new QLabel(centralwidget);
-        labelIP->setObjectName(QString::fromUtf8("labelIP"));
-        labelIP->setGeometry(QRect(110, 10, 31, 21));
-        labelPort = new QLabel(centralwidget);
-        labelPort->setObjectName(QString::fromUtf8("labelPort"));
-        labelPort->setGeometry(QRect(110, 40, 31, 19));
-        labelStatus = new QLabel(centralwidget);
-        labelStatus->setObjectName(QString::fromUtf8("labelStatus"));
-        labelStatus->setGeometry(QRect(10, 70, 101, 19));
-        lineEditSend = new QLineEdit(centralwidget);
-        lineEditSend->setObjectName(QString::fromUtf8("lineEditSend"));
-        lineEditSend->setGeometry(QRect(170, 120, 113, 27));
-        pushButtonSend = new QPushButton(centralwidget);
-        pushButtonSend->setObjectName(QString::fromUtf8("pushButtonSend"));
-        pushButtonSend->setGeometry(QRect(180, 90, 87, 27));
-        pushButtonSearch = new QPushButton(centralwidget);
-        pushButtonSearch->setObjectName(QString::fromUtf8("pushButtonSearch"));
-        pushButtonSearch->setGeometry(QRect(170, 160, 121, 27));
-        lineEditIP_2 = new QLineEdit(centralwidget);
-        lineEditIP_2->setObjectName(QString::fromUtf8("lineEditIP_2"));
-        lineEditIP_2->setGeometry(QRect(190, 10, 31, 27));
-        lineEditIP_3 = new QLineEdit(centralwidget);
-        lineEditIP_3->setObjectName(QString::fromUtf8("lineEditIP_3"));
-        lineEditIP_3->setGeometry(QRect(230, 10, 31, 27));
-        lineEditIP_4 = new QLineEdit(centralwidget);
-        lineEditIP_4->setObjectName(QString::fromUtf8("lineEditIP_4"));
-        lineEditIP_4->setGeometry(QRect(270, 10, 31, 27));
-        labelSearch = new QLabel(centralwidget);
+
+        gridLayout->addWidget(pushButtonDisconnect, 2, 0, 1, 2);
+
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        labelSearch = new QLabel(gridLayoutWidget);
         labelSearch->setObjectName(QString::fromUtf8("labelSearch"));
-        labelSearch->setGeometry(QRect(170, 190, 111, 19));
-        horizontalLayoutWidget = new QWidget(centralwidget);
-        horizontalLayoutWidget->setObjectName(QString::fromUtf8("horizontalLayoutWidget"));
-        horizontalLayoutWidget->setGeometry(QRect(480, 60, 277, 328));
-        horizontalLayout = new QHBoxLayout(horizontalLayoutWidget);
+
+        horizontalLayout_3->addWidget(labelSearch);
+
+
+        gridLayout->addLayout(horizontalLayout_3, 0, 2, 1, 1);
+
+        listWidget = new QListWidget(gridLayoutWidget);
+        listWidget->setObjectName(QString::fromUtf8("listWidget"));
+
+        gridLayout->addWidget(listWidget, 3, 3, 1, 1);
+
+        textEditComm = new QTextEdit(gridLayoutWidget);
+        textEditComm->setObjectName(QString::fromUtf8("textEditComm"));
+
+        gridLayout->addWidget(textEditComm, 3, 0, 1, 3);
+
+        labelStatus = new QLabel(gridLayoutWidget);
+        labelStatus->setObjectName(QString::fromUtf8("labelStatus"));
+
+        gridLayout->addWidget(labelStatus, 0, 0, 1, 2);
+
+        labelPort_3 = new QLabel(gridLayoutWidget);
+        labelPort_3->setObjectName(QString::fromUtf8("labelPort_3"));
+
+        gridLayout->addWidget(labelPort_3, 0, 3, 1, 1);
+
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        labelPort = new QLabel(gridLayoutWidget);
+        labelPort->setObjectName(QString::fromUtf8("labelPort"));
+
+        horizontalLayout_2->addWidget(labelPort);
+
+        lineEditPort = new QLineEdit(gridLayoutWidget);
+        lineEditPort->setObjectName(QString::fromUtf8("lineEditPort"));
+        lineEditPort->setMaxLength(4);
+
+        horizontalLayout_2->addWidget(lineEditPort);
+
+
+        gridLayout->addLayout(horizontalLayout_2, 2, 2, 1, 1);
+
+        pushButtonConnect = new QPushButton(gridLayoutWidget);
+        pushButtonConnect->setObjectName(QString::fromUtf8("pushButtonConnect"));
+        pushButtonConnect->setMaximumSize(QSize(91, 16777215));
+
+        gridLayout->addWidget(pushButtonConnect, 1, 0, 1, 2);
+
+        pushButtonSend_2 = new QPushButton(gridLayoutWidget);
+        pushButtonSend_2->setObjectName(QString::fromUtf8("pushButtonSend_2"));
+        pushButtonSend_2->setEnabled(true);
+
+        gridLayout->addWidget(pushButtonSend_2, 1, 3, 1, 1);
+
+        pushButtonSend = new QPushButton(gridLayoutWidget);
+        pushButtonSend->setObjectName(QString::fromUtf8("pushButtonSend"));
+        pushButtonSend->setEnabled(true);
+
+        gridLayout->addWidget(pushButtonSend, 4, 3, 1, 1);
+
+        lineEditSend = new QLineEdit(gridLayoutWidget);
+        lineEditSend->setObjectName(QString::fromUtf8("lineEditSend"));
+
+        gridLayout->addWidget(lineEditSend, 4, 0, 1, 3);
+
+        horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        verticalLayout_2 = new QVBoxLayout();
-        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        lineEdit_2 = new QLineEdit(horizontalLayoutWidget);
-        lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
+        labelIP = new QLabel(gridLayoutWidget);
+        labelIP->setObjectName(QString::fromUtf8("labelIP"));
 
-        verticalLayout_2->addWidget(lineEdit_2);
+        horizontalLayout->addWidget(labelIP);
 
-        lineEdit_3 = new QLineEdit(horizontalLayoutWidget);
-        lineEdit_3->setObjectName(QString::fromUtf8("lineEdit_3"));
+        horizontalSpacer_4 = new QSpacerItem(10, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
-        verticalLayout_2->addWidget(lineEdit_3);
+        horizontalLayout->addItem(horizontalSpacer_4);
 
-        lineEdit_5 = new QLineEdit(horizontalLayoutWidget);
-        lineEdit_5->setObjectName(QString::fromUtf8("lineEdit_5"));
+        lineEditIP1 = new QLineEdit(gridLayoutWidget);
+        lineEditIP1->setObjectName(QString::fromUtf8("lineEditIP1"));
+        lineEditIP1->setMaxLength(15);
 
-        verticalLayout_2->addWidget(lineEdit_5);
-
-        lineEdit_4 = new QLineEdit(horizontalLayoutWidget);
-        lineEdit_4->setObjectName(QString::fromUtf8("lineEdit_4"));
-
-        verticalLayout_2->addWidget(lineEdit_4);
-
-        lineEdit_6 = new QLineEdit(horizontalLayoutWidget);
-        lineEdit_6->setObjectName(QString::fromUtf8("lineEdit_6"));
-
-        verticalLayout_2->addWidget(lineEdit_6);
-
-        lineEdit = new QLineEdit(horizontalLayoutWidget);
-        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
-
-        verticalLayout_2->addWidget(lineEdit);
-
-        lineEdit_8 = new QLineEdit(horizontalLayoutWidget);
-        lineEdit_8->setObjectName(QString::fromUtf8("lineEdit_8"));
-
-        verticalLayout_2->addWidget(lineEdit_8);
-
-        lineEdit_7 = new QLineEdit(horizontalLayoutWidget);
-        lineEdit_7->setObjectName(QString::fromUtf8("lineEdit_7"));
-
-        verticalLayout_2->addWidget(lineEdit_7);
-
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        verticalLayout_2->addItem(horizontalSpacer);
+        horizontalLayout->addWidget(lineEditIP1);
 
 
-        horizontalLayout->addLayout(verticalLayout_2);
-
-        verticalLayout = new QVBoxLayout();
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        pushButton_3 = new QPushButton(horizontalLayoutWidget);
-        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
-
-        verticalLayout->addWidget(pushButton_3);
-
-        pushButton_2 = new QPushButton(horizontalLayoutWidget);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
-
-        verticalLayout->addWidget(pushButton_2);
-
-        pushButton_5 = new QPushButton(horizontalLayoutWidget);
-        pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
-
-        verticalLayout->addWidget(pushButton_5);
-
-        pushButton_8 = new QPushButton(horizontalLayoutWidget);
-        pushButton_8->setObjectName(QString::fromUtf8("pushButton_8"));
-
-        verticalLayout->addWidget(pushButton_8);
-
-        pushButton_4 = new QPushButton(horizontalLayoutWidget);
-        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
-
-        verticalLayout->addWidget(pushButton_4);
-
-        pushButton = new QPushButton(horizontalLayoutWidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-
-        verticalLayout->addWidget(pushButton);
-
-        pushButton_6 = new QPushButton(horizontalLayoutWidget);
-        pushButton_6->setObjectName(QString::fromUtf8("pushButton_6"));
-
-        verticalLayout->addWidget(pushButton_6);
-
-        pushButton_7 = new QPushButton(horizontalLayoutWidget);
-        pushButton_7->setObjectName(QString::fromUtf8("pushButton_7"));
-
-        verticalLayout->addWidget(pushButton_7);
-
-        pushButton_9 = new QPushButton(horizontalLayoutWidget);
-        pushButton_9->setObjectName(QString::fromUtf8("pushButton_9"));
-
-        verticalLayout->addWidget(pushButton_9);
-
-        pushButton_10 = new QPushButton(horizontalLayoutWidget);
-        pushButton_10->setObjectName(QString::fromUtf8("pushButton_10"));
-
-        verticalLayout->addWidget(pushButton_10);
-
-
-        horizontalLayout->addLayout(verticalLayout);
+        gridLayout->addLayout(horizontalLayout, 1, 2, 1, 1);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 835, 24));
+        menubar->setGeometry(QRect(0, 0, 853, 24));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
         MainWindow->setStatusBar(statusbar);
-        QWidget::setTabOrder(pushButtonConnect, lineEditIP);
-        QWidget::setTabOrder(lineEditIP, lineEditIP_2);
-        QWidget::setTabOrder(lineEditIP_2, lineEditIP_3);
-        QWidget::setTabOrder(lineEditIP_3, lineEditIP_4);
-        QWidget::setTabOrder(lineEditIP_4, lineEditPort);
-        QWidget::setTabOrder(lineEditPort, pushButtonSearch);
-        QWidget::setTabOrder(pushButtonSearch, pushButtonSend);
-        QWidget::setTabOrder(pushButtonSend, lineEditSend);
-        QWidget::setTabOrder(lineEditSend, textEditComm);
-        QWidget::setTabOrder(textEditComm, pushButtonDisconnect);
+        QWidget::setTabOrder(pushButtonConnect, lineEditIP1);
 
         retranslateUi(MainWindow);
 
@@ -265,24 +296,27 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         actionConnectClick->setText(QCoreApplication::translate("MainWindow", "ConnectClick", nullptr));
-        pushButtonConnect->setText(QCoreApplication::translate("MainWindow", "Connect", nullptr));
+        labelPort_2->setText(QCoreApplication::translate("MainWindow", "Move Editor", nullptr));
+        pushButtonForwardDistance->setText(QCoreApplication::translate("MainWindow", "Forward distance", nullptr));
+        pushButtonBackwardDistance->setText(QCoreApplication::translate("MainWindow", "Backward distance", nullptr));
+        pushButtonForwardSpeed->setText(QCoreApplication::translate("MainWindow", " Forward speed", nullptr));
+        pushButtonBackwardSpeed->setText(QCoreApplication::translate("MainWindow", "Backward speed", nullptr));
+        pushButtonTurnLeft->setText(QCoreApplication::translate("MainWindow", "Turn Left", nullptr));
+        pushButtonTurnRight->setText(QCoreApplication::translate("MainWindow", "Turn Right", nullptr));
+        pushButtonMotorRight->setText(QCoreApplication::translate("MainWindow", "Motor right speed", nullptr));
+        pushButtonMotorLeft->setText(QCoreApplication::translate("MainWindow", "Motor left speed", nullptr));
+        pushButtonStop->setText(QCoreApplication::translate("MainWindow", "Stop", nullptr));
         pushButtonDisconnect->setText(QCoreApplication::translate("MainWindow", "Disconnect", nullptr));
-        labelIP->setText(QCoreApplication::translate("MainWindow", "IP:", nullptr));
-        labelPort->setText(QCoreApplication::translate("MainWindow", "Port:", nullptr));
-        labelStatus->setText(QCoreApplication::translate("MainWindow", "Disconnected", nullptr));
-        pushButtonSend->setText(QCoreApplication::translate("MainWindow", "Send", nullptr));
-        pushButtonSearch->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
         labelSearch->setText(QCoreApplication::translate("MainWindow", "...", nullptr));
-        pushButton_3->setText(QCoreApplication::translate("MainWindow", "Forward distance", nullptr));
-        pushButton_2->setText(QCoreApplication::translate("MainWindow", "Backward distance", nullptr));
-        pushButton_5->setText(QCoreApplication::translate("MainWindow", " Forward speed", nullptr));
-        pushButton_8->setText(QCoreApplication::translate("MainWindow", "Backward speed", nullptr));
-        pushButton_4->setText(QCoreApplication::translate("MainWindow", "Turn Left", nullptr));
-        pushButton->setText(QCoreApplication::translate("MainWindow", "Turn Right", nullptr));
-        pushButton_6->setText(QCoreApplication::translate("MainWindow", "Motor right speed", nullptr));
-        pushButton_7->setText(QCoreApplication::translate("MainWindow", "Motor left speed", nullptr));
-        pushButton_9->setText(QCoreApplication::translate("MainWindow", "Stop", nullptr));
-        pushButton_10->setText(QCoreApplication::translate("MainWindow", "Exit", nullptr));
+        labelStatus->setText(QCoreApplication::translate("MainWindow", "Disconnected", nullptr));
+        labelPort_3->setText(QCoreApplication::translate("MainWindow", "Commands", nullptr));
+        labelPort->setText(QCoreApplication::translate("MainWindow", "Port:", nullptr));
+        lineEditPort->setText(QCoreApplication::translate("MainWindow", "5050", nullptr));
+        pushButtonConnect->setText(QCoreApplication::translate("MainWindow", "Connect", nullptr));
+        pushButtonSend_2->setText(QCoreApplication::translate("MainWindow", "Send commands", nullptr));
+        pushButtonSend->setText(QCoreApplication::translate("MainWindow", " Send message", nullptr));
+        labelIP->setText(QCoreApplication::translate("MainWindow", "IP:", nullptr));
+        lineEditIP1->setText(QCoreApplication::translate("MainWindow", "192.168.2.100", nullptr));
     } // retranslateUi
 
 };

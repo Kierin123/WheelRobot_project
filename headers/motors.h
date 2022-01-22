@@ -26,8 +26,7 @@
 #define TURN_90_DEGREE      165
 #define DISTANCE_ENC_FACTOR 65 / 200 
 
-#define RIGHT_MOTOR_FACTOR  4
-#define LEFT_MOTOR_FACTOR   0
+#define ACK 0x06
 
 enum
 {
@@ -57,9 +56,18 @@ typedef struct
     int             speed;
     int             state;
 
+    int             motor_speed_faktor;
+
     Tencoder        *encoder;
 
 } Tmotor;
+
+// static int motor_R_position = 0;
+// static int motor_L_position = 0;
+
+// int RIGHT_MOTOR_FACTOR = 4;
+// int LEFT_MOTOR_FACTOR = 0;
+
 
 void _motor_init(Tmotor *_motor, int pwm_pin, int enable_pin, int fault_pin, int dir_pin, Tencoder *_enc, int encoder_pin_a, int encoder_pin_b);
 int _encoder_read(Tencoder *_enc);
@@ -68,5 +76,6 @@ char _stop_motor(Tmotor *_motor);
 char _speed_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int speed);
 char _distance_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int dist);
 char _turn(Tmotor *_motor_l, Tmotor *_motor_r, int dir);
+char _set_motor_faktor(Tmotor *_motor, int value);
 
 #endif

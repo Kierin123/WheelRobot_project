@@ -6,291 +6,285 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>835</width>
-    <height>600</height>
+    <width>853</width>
+    <height>604</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButtonConnect">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>91</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>91</width>
-      <height>16777215</height>
-     </size>
-    </property>
-    <property name="text">
-     <string>Connect</string>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="textEditComm">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>90</y>
-      <width>151</width>
-      <height>331</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditIP">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>10</y>
-      <width>31</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditPort">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>40</y>
-      <width>151</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonDisconnect">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>40</y>
-      <width>91</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Disconnect</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelIP">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>10</y>
-      <width>31</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>IP:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelPort">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>40</y>
-      <width>31</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Port:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelStatus">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>101</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Disconnected</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditSend">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>120</y>
-      <width>113</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonSend">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>90</y>
-      <width>87</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Send</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonSearch">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>160</y>
-      <width>121</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Search</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditIP_2">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>10</y>
-      <width>31</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditIP_3">
-    <property name="geometry">
-     <rect>
-      <x>230</x>
-      <y>10</y>
-      <width>31</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditIP_4">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>10</y>
-      <width>31</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelSearch">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>190</y>
-      <width>111</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>...</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="formLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>10</y>
-      <width>265</width>
-      <height>326</height>
+      <x>620</x>
+      <y>0</y>
+      <width>222</width>
+      <height>331</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout">
+     <property name="horizontalSpacing">
+      <number>6</number>
+     </property>
      <item row="0" column="0">
-      <widget class="QLineEdit" name="lineEdit_2"/>
-     </item>
-     <item row="1" column="1">
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QLabel" name="labelPort_2">
        <property name="text">
-        <string>Backward distance</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QPushButton" name="pushButton_5">
-       <property name="text">
-        <string> Forward speed</string>
+        <string>Move Editor</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLineEdit" name="lineEdit_3"/>
+      <widget class="QLineEdit" name="lineEditForwardDisctance">
+       <property name="maxLength">
+        <number>3</number>
+       </property>
+      </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLineEdit" name="lineEdit_5"/>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="pushButton_3">
+     <item row="1" column="1">
+      <widget class="QPushButton" name="pushButtonForwardDistance">
        <property name="text">
         <string>Forward distance</string>
        </property>
       </widget>
      </item>
+     <item row="2" column="0">
+      <widget class="QLineEdit" name="lineEditBackwardDistance">
+       <property name="maxLength">
+        <number>3</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QPushButton" name="pushButtonBackwardDistance">
+       <property name="text">
+        <string>Backward distance</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLineEdit" name="lineEditForwardSpeed">
+       <property name="maxLength">
+        <number>3</number>
+       </property>
+      </widget>
+     </item>
      <item row="3" column="1">
-      <widget class="QPushButton" name="pushButton_8">
+      <widget class="QPushButton" name="pushButtonForwardSpeed">
+       <property name="text">
+        <string> Forward speed</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLineEdit" name="lineEditBackwardSpeed">
+       <property name="maxLength">
+        <number>3</number>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QPushButton" name="pushButtonBackwardSpeed">
        <property name="text">
         <string>Backward speed</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QPushButton" name="pushButton_4">
+     <item row="5" column="1">
+      <widget class="QPushButton" name="pushButtonTurnLeft">
        <property name="text">
         <string>Turn Left</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
-      <widget class="QPushButton" name="pushButton">
+     <item row="6" column="1">
+      <widget class="QPushButton" name="pushButtonTurnRight">
        <property name="text">
         <string>Turn Right</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
-      <widget class="QPushButton" name="pushButton_6">
+     <item row="7" column="0">
+      <widget class="QLineEdit" name="lineEditMotorRight">
+       <property name="maxLength">
+        <number>3</number>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QPushButton" name="pushButtonMotorRight">
        <property name="text">
         <string>Motor right speed</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
-      <widget class="QPushButton" name="pushButton_7">
+     <item row="8" column="0">
+      <widget class="QLineEdit" name="lineEditMotorLeft">
+       <property name="maxLength">
+        <number>3</number>
+       </property>
+       <property name="frame">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QPushButton" name="pushButtonMotorLeft">
        <property name="text">
         <string>Motor left speed</string>
        </property>
       </widget>
      </item>
-     <item row="8" column="1">
-      <widget class="QPushButton" name="pushButton_9">
+     <item row="9" column="1">
+      <widget class="QPushButton" name="pushButtonStop">
        <property name="text">
         <string>Stop</string>
        </property>
       </widget>
      </item>
-     <item row="9" column="1">
-      <widget class="QPushButton" name="pushButton_10">
+    </layout>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>615</width>
+      <height>541</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="0" colspan="2">
+      <widget class="QPushButton" name="pushButtonDisconnect">
        <property name="text">
-        <string>Exit</string>
+        <string>Disconnect</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
-      <widget class="QLineEdit" name="lineEdit_4"/>
+     <item row="0" column="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="labelSearch">
+         <property name="text">
+          <string>...</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="6" column="0">
-      <widget class="QLineEdit" name="lineEdit_8"/>
+     <item row="3" column="3">
+      <widget class="QListWidget" name="listWidget"/>
      </item>
-     <item row="7" column="0">
-      <widget class="QLineEdit" name="lineEdit_7"/>
+     <item row="3" column="0" colspan="3">
+      <widget class="QTextEdit" name="textEditComm"/>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <widget class="QLabel" name="labelStatus">
+       <property name="text">
+        <string>Disconnected</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLabel" name="labelPort_3">
+       <property name="text">
+        <string>Commands</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="labelPort">
+         <property name="text">
+          <string>Port:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEditPort">
+         <property name="text">
+          <string>5050</string>
+         </property>
+         <property name="maxLength">
+          <number>4</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="0" colspan="2">
+      <widget class="QPushButton" name="pushButtonConnect">
+       <property name="maximumSize">
+        <size>
+         <width>91</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Connect</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QPushButton" name="pushButtonSend_2">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Send commands</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3">
+      <widget class="QPushButton" name="pushButtonSend">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string> Send message</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0" colspan="3">
+      <widget class="QLineEdit" name="lineEditSend"/>
+     </item>
+     <item row="1" column="2">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="labelIP">
+         <property name="text">
+          <string>IP:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>10</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEditIP1">
+         <property name="text">
+          <string>192.168.2.100</string>
+         </property>
+         <property name="maxLength">
+          <number>15</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
@@ -300,7 +294,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>835</width>
+     <width>853</width>
      <height>24</height>
     </rect>
    </property>
@@ -314,16 +308,7 @@
  </widget>
  <tabstops>
   <tabstop>pushButtonConnect</tabstop>
-  <tabstop>lineEditIP</tabstop>
-  <tabstop>lineEditIP_2</tabstop>
-  <tabstop>lineEditIP_3</tabstop>
-  <tabstop>lineEditIP_4</tabstop>
-  <tabstop>lineEditPort</tabstop>
-  <tabstop>pushButtonSearch</tabstop>
-  <tabstop>pushButtonSend</tabstop>
-  <tabstop>lineEditSend</tabstop>
-  <tabstop>textEditComm</tabstop>
-  <tabstop>pushButtonDisconnect</tabstop>
+  <tabstop>lineEditIP1</tabstop>
  </tabstops>
  <resources/>
  <connections/>

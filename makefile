@@ -2,9 +2,9 @@ CFLAGS = -Wall -Wextra -Wpedantic
 CC = gcc
 LDFLAGS = 
 LIBS = -lwiringPi -lpthread
-SOURCES = main.c motors.c
+SOURCES = main.c motors.c TCP.c
 OBJECTS = $(SOURCES:.c=.o)
-EXECUTABLE = program
+EXECUTABLE = wheelrobot
 
 #Rule which build all project
 all: clean $(OBJECTS)

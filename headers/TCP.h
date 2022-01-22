@@ -10,13 +10,10 @@
 #include <sys/types.h>
 #include <fcntl.h>
 
-#define CHAR_IN_MESSAGE 30
+#define CHAR_IN_MESSAGE 100
 #define CHAR_IN_ANSWER 2
 
-int send_message(char *msg);
-char *read_message(int *_socket_desc);
 
-void socket_init(int _port);
-void connection_handler(void *socket_desc);
+int socket_init(int _port);
 
 #endif

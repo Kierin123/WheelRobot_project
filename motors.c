@@ -1,7 +1,6 @@
 #include "headers/motors.h"
 
-int motor_R_position = 0;
-int motor_L_position = 0;
+
 
 void _motor_init(Tmotor *_motor, int pwm_pin, int enable_pin, int fault_pin, int dir_pin, Tencoder *_enc, \
                  int encoder_pin_a, int encoder_pin_b)
@@ -59,9 +58,9 @@ int _encoder_read(Tencoder *_enc)
 char _set_speed(Tmotor *_motor, int speed, int dir)
 {
     digitalWrite(_motor->dir_pin, dir);
-    pwmWrite(_motor->pwm_pin, speed + LEFT_MOTOR_FACTOR);
+    pwmWrite(_motor->pwm_pin, speed + _motor->motor_speed_faktor);
     digitalWrite(_motor->enable_pin, LOW);
-        return 0x06;
+        return ACK;
 
 }
 
@@ -69,7 +68,7 @@ char _stop_motor(Tmotor *_motor)
 {
     pwmWrite(_motor->pwm_pin, 0);
     digitalWrite(_motor->enable_pin, HIGH);
-        return 0x06;
+        return ACK;
 
 }
 
@@ -77,18 +76,16 @@ char _speed_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int speed)
 {
     _set_speed(_motor_l, speed, !dir);
     _set_speed(_motor_r, speed, dir);
-        return 0x06;
+        return ACK;
 
 }
 
 char _distance_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int dist)
 {
-    // encoder_read();
-
     _encoder_read(_motor_l->encoder);
     _encoder_read(_motor_r->encoder);
 
-    static int last_position = 0;
+    int last_position = (int)(_motor_l->encoder->counter + _motor_r->encoder->counter) * DISTANCE_ENC_FACTOR;
     int actual_posision_mm = (int)(_motor_l->encoder->counter + _motor_r->encoder->counter) * DISTANCE_ENC_FACTOR;
     _speed_move(_motor_l, _motor_r, dir, 250);
 
@@ -117,7 +114,7 @@ char _distance_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int dist)
     last_position = actual_posision_mm;
     _stop_motor(_motor_r);
     _stop_motor(_motor_l);
-        return 0x06;
+        return ACK;
 
 }
 
@@ -153,6 +150,13 @@ char _turn(Tmotor *_motor_l, Tmotor *_motor_r, int dir)
 
     _stop_motor(_motor_r);
     _stop_motor(_motor_l);
-    return 0x06;
+    return ACK;
 }
+
+char _set_motor_faktor(Tmotor *_motor, int value)
+{
+    _motor->motor_speed_faktor = value;
+    return ACK;
+}
+
 

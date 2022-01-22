@@ -32,6 +32,7 @@ void Client::ClientConnect()
 
 void Client::ConnectionTimeout()
 {
+
     if (SocketDesc->state() == QAbstractSocket::ConnectingState)
     {
         SocketDesc->abort();
@@ -52,65 +53,28 @@ bool Client::GetStatus()
 
 void Client::ReadyToRead()
 {
-
     QDataStream input(SocketDesc);
-    char single_char[30];
     QString msg;
     qint64 numberOfBytes = SocketDesc->bytesAvailable();
+    char singleChar = 0;
 
-    if(numberOfBytes > 0)
+    while(numberOfBytes >= 0)
     {
-        input.readRawData(single_char,numberOfBytes);
-        msg.append(single_char);
+        input.readRawData(&singleChar,1);
+        if(singleChar != '\n')
+            msg.append(singleChar);
+        numberOfBytes--;
     }
     emit ReadDone(msg);
-//    if(SocketDesc->bytesAvailable())
-//    {
-//        input.readRawData(single_char,1);
-//        msg.append(*single_char);
-
-//        if(*single_char == '\n')
-//        {
-//            emit ReadDone(QString(msg));
-//        }
-//    }
-
-
-    //in.setVersion(QDataStream::Qt_5_10);
-    //    while(1)
-    //    {
-    //        if (!NextBlockSize)
-    //        {
-    //            if (SocketDesc->bytesAvailable() < sizeof(uint16_t)) { break; }
-    //            input >> NextBlockSize;
-    //        }
-
-    //        if (SocketDesc->bytesAvailable() < NextBlockSize) { break; }
-
-
-    //       char msg[4];
-    //        input.readRawData(msg, 4);
-    //  QString str(msg);
-    //        //input >> str;
-
-    //        if (str == "0")
-    //        {
-    //            str = "Connection closed";
-    //            ClientDisconnect();
-    //        }
-
-    //        emit ReadDone( str);
-    //        NextBlockSize = 0;
-    //    }
-
 }
 
-bool Client::SetIP(QString _ip)
+bool Client::SetIP(QString _ip, int _port)
 {
 
     ConnectionStatus = false;
 
     HostAddr = _ip;
+    PortNum = _port;
 
     SocketDesc = new QTcpSocket(this);
 
@@ -118,6 +82,9 @@ bool Client::SetIP(QString _ip)
 
     return 0;
 }
+
+
+
 
 
 

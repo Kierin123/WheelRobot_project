@@ -13,16 +13,17 @@ class Client : public QObject
 
     QString HostAddr;
     int PortNum;
-    bool ConnectionStatus;
     uint16_t NextBlockSize;
     QTimer *timeoutConnection;
 
 public:
+    bool ConnectionStatus;
+
     Client(const QString _HostAddr, int _PortNum ,QObject *parent = nullptr);
 
     QTcpSocket *SocketDesc;
     bool GetStatus();
-    bool SetIP(QString _ip);
+    bool SetIP(QString _ip, int _port);
 
 signals:
     void StatusChanged(bool);
