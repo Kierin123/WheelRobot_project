@@ -14,6 +14,6 @@
 #define CHAR_IN_ANSWER 2
 
 
-int socket_init(int _port);
+int32_t socket_init(uint32_t _port);
 
 #endif

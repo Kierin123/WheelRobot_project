@@ -1,10 +1,10 @@
 #include "headers/TCP.h"
 
-int socket_init(int _port)
+int32_t socket_init(uint32_t _port)
 {
-    int socket_desc;
+    int32_t socket_desc;
     struct sockaddr_in server;
-    int port = _port;
+    uint32_t port = _port;
 
     // Create socket
     socket_desc = socket(AF_INET, SOCK_STREAM, 0);
@@ -25,9 +25,9 @@ int socket_init(int _port)
         perror("bind failed");
         return -1;
     }
-    printf("bind done\n");
+    printf("Bind done...\n");
 
-    listen(socket_desc, 10);
+    listen(socket_desc, 2);
 
     return socket_desc;
 }

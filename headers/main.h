@@ -11,19 +11,20 @@
 #include "motors.h"
 #include "TCP.h"
 
-#define READ_FIFO_SIZE 100
-#define WRITE_FIFO_SIZE 2
-#define ACK 0x06
+#define READ_DATA_SIZE 6
+#define WRITE_DATA_SIZE 2
+#define _ACK 0x06
+#define _EOF 0x04
 
 #define DEFAULT_PORT 5050
 
-Tmotor LeftMotor;
-Tencoder LeftEncoder;
-Tmotor RightMotor;
-Tencoder RightEncoder;
+
+Tmotor      LeftMotor;
+Tencoder    LeftEncoder;
+Tmotor      RightMotor;
+Tencoder    RightEncoder;
 
 char task_handler(char *command);
-
 
 enum 
 {

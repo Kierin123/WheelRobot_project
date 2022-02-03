@@ -2,6 +2,7 @@
 #define MOTORS_H
 
 #include <stdio.h>
+#include <stdint.h>
 #include <wiringPi.h>
 #include <math.h>
 
@@ -21,12 +22,27 @@
 #define ENC_L_OUTPUT_A      26
 #define ENC_L_OUTPUT_B      20
 
-// Magic numbers - experimental developed 
+// ########################################
+//      Magic numbers, and constants
+// ########################################
 
 #define TURN_90_DEGREE      165
 #define DISTANCE_ENC_FACTOR 65 / 200 
 
-#define ACK 0x06
+#define MOTOR_ACK 0x06
+
+#define __1BIT_LSB_MASK 0x01
+#define __2BIT_LSB_MASK 0x03
+#define __3BIT_LSB_MASK 0x07
+#define __4BIT_LSB_MASK 0x0F
+
+#define __RIGHT_DIR_ENC_MASK 0x4B
+#define __LEFT_DIR_ENC_MASK  0x87
+
+
+// ########################################
+//      Direction enum 
+// ########################################
 
 enum
 {
@@ -38,23 +54,27 @@ enum
 
 typedef struct
 {
-    int             a_input_pin;
-    int             b_input_pin;
+    uint8_t             a_input_pin;
+    uint8_t             b_input_pin;
 
-    int             counter;
-    unsigned char   last_read;
+    int64_t             counter;
+    unsigned char                last_read;
 
 } Tencoder;
 
+// ########################################
+//     Motor description structure
+// ########################################
+
 typedef struct
 {
-    int             pwm_pin;
-    int             enable_pin;
-    int             fault_pin;
-    int             dir_pin;
+    uint8_t             pwm_pin;
+    uint8_t             enable_pin;
+    uint8_t             fault_pin;
+    uint8_t             dir_pin;
 
-    int             speed;
-    int             state;
+    uint32_t             speed;
+    uint8_t             state;
 
     int             motor_speed_faktor;
 
@@ -62,11 +82,6 @@ typedef struct
 
 } Tmotor;
 
-// static int motor_R_position = 0;
-// static int motor_L_position = 0;
-
-// int RIGHT_MOTOR_FACTOR = 4;
-// int LEFT_MOTOR_FACTOR = 0;
 
 
 void _motor_init(Tmotor *_motor, int pwm_pin, int enable_pin, int fault_pin, int dir_pin, Tencoder *_enc, int encoder_pin_a, int encoder_pin_b);

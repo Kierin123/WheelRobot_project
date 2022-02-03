@@ -1,117 +1,5 @@
 #include "headers/main.h"
 
-int main(int argc, char *argv[])
-{
-	printf("\nWelcome at WheelRobot App. \nCreated by Marcin Kierinkiewicz 2021\n");
-
-	int server_socket, new_socket, server_addr_len;
-	int *client_socket = (int *)malloc(sizeof(int));
-	struct sockaddr_in client;
-	int read_size = 0;
-	char *client_message = (char *)malloc(6);
-	int port = DEFAULT_PORT;
-	int task_running = 0;
-
-	if (argc > 1)
-	{
-		port = atoi(argv[1]);
-	}
-
-	server_socket = socket_init(port);
-	if (server_socket < 0)
-	{
-		perror("Socket create error");
-		return -1;
-	}
-
-	char read_data[READ_FIFO_SIZE];
-	char *single_command; // = (char *)malloc(sizeof(char) * 5);
-
-	char write_data[WRITE_FIFO_SIZE] = {0};
-
-	// int read_value = 0;
-
-	if (!wiringPiSetupGpio())
-	{
-		printf("Program Init...\n");
-
-		_motor_init(&LeftMotor, PWM_MOTOR_L_PIN, EN_MOTORS_PIN, FAULT_MOTORS_PIN, DIR_MOTOR_L_PIN, &LeftEncoder, ENC_L_OUTPUT_A, ENC_L_OUTPUT_B);
-
-		_motor_init(&RightMotor, PWM_MOTOR_R_PIN, EN_MOTORS_PIN, FAULT_MOTORS_PIN, DIR_MOTOR_R_PIN, &RightEncoder, ENC_R_OUTPUT_A, ENC_R_OUTPUT_B);
-	}
-
-	printf("Waiting for incoming connections...\n");
-	server_addr_len = sizeof(struct sockaddr_in);
-
-	while ((new_socket = accept(server_socket, (struct sockaddr *)&client, (socklen_t *)&server_addr_len)))
-	{
-		printf("Client connected.\n");
-		task_running = 1;
-
-		client_message = "Connected to WheelRobot!\n";
-		write(new_socket, client_message, strlen(client_message));
-
-		client_socket = (int *)realloc(client_socket, 1);
-		*client_socket = new_socket;
-
-		while (task_running)
-		{
-			while ((read_size = recv(*client_socket, read_data, CHAR_IN_MESSAGE, 0)) > 0)
-			{
-
-				// printf("Read size: %d; Data: %s", read_size, read_data);
-
-				single_command = strtok(read_data, ",");
-				while (single_command != NULL)
-				{
-
-					write_data[0] = task_handler(single_command);
-					while (write_data[0] != ACK)
-					{
-						write(*client_socket, write_data, strlen(write_data));
-						// memset(write_data, 0, strlen(write_data));
-						write_data[0] = 0;
-					}
-					if (write_data[0] == 0x04)
-					{
-						break;
-					}
-
-					// memset(single_command, 0, 5);
-
-					single_command = strtok(NULL, ",");
-				}
-
-				// memset(read_data, 0, strlen(read_data));
-
-				for (size_t i = 0; i < READ_FIFO_SIZE; i++)
-				{
-					read_data[i] = '\0';
-				}
-			}
-
-			task_running = 0;
-
-			if (read_size == 0)
-			{
-				printf("Client disconnected\n");
-				fflush(stdout);
-			}
-			else if (read_size == -1)
-			{
-				perror("recv failed");
-			}
-		}
-	}
-
-	close(server_socket);
-	free(client_socket);
-	free(client_message);
-	printf("Wheel Robot End.\n");
-
-	return 0;
-}
-
 char task_handler(char *command)
 {
 	char output = 0;
@@ -120,12 +8,11 @@ char task_handler(char *command)
 
 	switch (_command)
 	{
-
 	case STOP:
 	{
-		if ((_stop_motor(&LeftMotor) == ACK) && (_stop_motor(&RightMotor) == ACK))
+		if ((_stop_motor(&LeftMotor) == _ACK) && (_stop_motor(&RightMotor) == _ACK))
 		{
-			output = ACK; // ACK
+			output = _ACK; // ACK
 		}
 	}
 	break;
@@ -180,11 +67,11 @@ char task_handler(char *command)
 
 	case EXIT:
 	{
-		if ((_stop_motor(&LeftMotor) == ACK) && (_stop_motor(&RightMotor) == ACK))
+		if ((_stop_motor(&LeftMotor) == _ACK) && (_stop_motor(&RightMotor) == _ACK))
 		{
-			output = ACK; // ACK
+			output = _ACK; // ACK
 		}
-		output = 0x04; // EOF
+		output = EOF; // EOF
 	}
 	break;
 
@@ -200,11 +87,127 @@ char task_handler(char *command)
 	break;
 
 	default:
-		output = ACK;
+		output = _ACK;
 		break;
 	}
 
 	_read_value = 0;
 
 	return output;
+}
+
+int main(int argc, char *argv[])
+{
+	printf("\nWheelRobot App. \nAuthor: Marcin Kierinkiewicz 2021\n");
+
+	// ########################################
+	//     Init socket variables
+	// ########################################
+
+	int32_t server_socket = 0, new_socket = 0, server_addr_len = 0;
+	int32_t *client_socket = (int *)malloc(sizeof(int));
+	struct sockaddr_in client;
+	uint32_t port = DEFAULT_PORT;
+	int32_t read_size = 0;
+
+	uint32_t task_running = 0;
+
+	char read_data[READ_DATA_SIZE] = {0};
+	char *single_command = NULL; // = (char *)malloc(sizeof(char) * 5);
+	char *client_message = (char *)malloc(sizeof(char) * 12);
+	char write_data[WRITE_DATA_SIZE] = {0};
+
+	// Port setup by program start parameters
+	if (argc > 1)
+	{
+		port = atoi(argv[1]);
+	}
+
+	server_socket = socket_init(port);
+	if (server_socket < 0)
+	{
+		perror("Socket create error");
+		return -1;
+	}
+
+
+	// ########################################
+	//     Motor setup
+	// ########################################
+
+	if (!wiringPiSetupGpio())
+	{
+		printf("Program Init...\n");
+
+		_motor_init(&LeftMotor, PWM_MOTOR_L_PIN, EN_MOTORS_PIN, FAULT_MOTORS_PIN, DIR_MOTOR_L_PIN, &LeftEncoder, ENC_L_OUTPUT_A, ENC_L_OUTPUT_B);
+
+		_motor_init(&RightMotor, PWM_MOTOR_R_PIN, EN_MOTORS_PIN, FAULT_MOTORS_PIN, DIR_MOTOR_R_PIN, &RightEncoder, ENC_R_OUTPUT_A, ENC_R_OUTPUT_B);
+	}
+
+	// ########################################
+	//     Socket start-up
+	// ########################################
+	printf("Waiting for incoming connections...\n");
+	server_addr_len = sizeof(struct sockaddr_in);
+
+	while ((new_socket = accept(server_socket, (struct sockaddr *)&client, (socklen_t *)&server_addr_len)))
+	{
+		printf("Client connected.\n");
+		task_running = 1;
+
+		char *client_message = "Connected.\n";
+		write(new_socket, client_message, strlen(client_message));
+
+		client_socket = (int *)realloc(client_socket, 1);
+		*client_socket = new_socket;
+
+		// ########################################
+		//     Main loop
+		// ########################################
+
+		while (task_running)
+		{
+			while ((read_size = recv(*client_socket, read_data, CHAR_IN_MESSAGE, 0)) > 0)
+			{
+				// Parsing commands
+				single_command = strtok(read_data, ",");
+				while (single_command != NULL)
+				{
+					write_data[0] = task_handler(single_command);
+					while (write_data[0] != _ACK)
+					{
+						write(*client_socket, write_data, strlen(write_data));
+						memset(write_data,'\0',WRITE_DATA_SIZE);
+					}
+					if (write_data[0] == _EOF)
+					{
+						break;
+					}
+					single_command = strtok(NULL, ",");
+				}
+				memset(read_data, '\0', READ_DATA_SIZE);
+			}
+
+			task_running = 0u;
+
+			if (read_size == 0u)
+			{
+				printf("Client disconnected\n");
+				fflush(stdout);
+			}
+			else if (read_size == -1)
+			{
+				perror("Received failed");
+			}
+		}
+	}
+
+	close(server_socket);
+	client_socket = NULL;
+	free(client_socket);
+	client_message = NULL;
+	free(client_message);
+	printf("Wheel Robot End.\n");
+
+	return 0;
 }
