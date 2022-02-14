@@ -28,6 +28,8 @@
 
 #define TURN_90_DEGREE      165
 #define DISTANCE_ENC_FACTOR 65 / 200 
+#define TURN_SPEED          250
+#define ARC_SPEED           350
 
 #define MOTOR_ACK 0x06
 
@@ -89,6 +91,7 @@ int _encoder_read(Tencoder *_enc);
 char _set_speed(Tmotor *_motor, int speed, int dir);
 char _stop_motor(Tmotor *_motor);
 char _speed_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int speed);
+char _arc(Tmotor *_motor_l, Tmotor *_motor_r, int dir, int angle);
 char _distance_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int dist);
 char _turn(Tmotor *_motor_l, Tmotor *_motor_r, int dir);
 char _set_motor_faktor(Tmotor *_motor, int value);

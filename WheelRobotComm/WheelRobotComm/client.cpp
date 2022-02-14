@@ -32,7 +32,6 @@ void Client::ClientConnect()
 
 void Client::ConnectionTimeout()
 {
-
     if (SocketDesc->state() == QAbstractSocket::ConnectingState)
     {
         SocketDesc->abort();

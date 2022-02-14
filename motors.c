@@ -1,8 +1,6 @@
 #include "headers/motors.h"
 
-
-
-void _motor_init(Tmotor *_motor, int pwm_pin, int enable_pin, int fault_pin, int dir_pin, Tencoder *_enc, \
+void _motor_init(Tmotor *_motor, int pwm_pin, int enable_pin, int fault_pin, int dir_pin, Tencoder *_enc,
                  int encoder_pin_a, int encoder_pin_b)
 {
     pinMode(pwm_pin, PWM_OUTPUT);
@@ -27,7 +25,6 @@ void _motor_init(Tmotor *_motor, int pwm_pin, int enable_pin, int fault_pin, int
 
     _motor->encoder = _enc;
 }
-
 
 int _encoder_read(Tencoder *_enc)
 {
@@ -60,23 +57,20 @@ char _set_speed(Tmotor *_motor, int speed, int dir)
     pwmWrite(_motor->pwm_pin, speed + _motor->motor_speed_faktor);
     digitalWrite(_motor->enable_pin, LOW);
     return MOTOR_ACK;
-
 }
 
 char _stop_motor(Tmotor *_motor)
 {
     pwmWrite(_motor->pwm_pin, 0);
     digitalWrite(_motor->enable_pin, HIGH);
-        return MOTOR_ACK;
-
+    return MOTOR_ACK;
 }
 
 char _speed_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int speed)
 {
     _set_speed(_motor_l, speed, !dir);
     _set_speed(_motor_r, speed, dir);
-        return MOTOR_ACK;
-
+    return MOTOR_ACK;
 }
 
 char _distance_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int dist)
@@ -95,7 +89,6 @@ char _distance_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int dist)
             _encoder_read(_motor_r->encoder);
             _encoder_read(_motor_l->encoder);
 
-
             actual_posision_mm = (int)(_motor_l->encoder->counter + _motor_r->encoder->counter) * DISTANCE_ENC_FACTOR;
         }
     }
@@ -113,8 +106,43 @@ char _distance_move(Tmotor *_motor_l, Tmotor *_motor_r, int dir, const int dist)
     last_position = actual_posision_mm;
     _stop_motor(_motor_r);
     _stop_motor(_motor_l);
-        return MOTOR_ACK;
+    return MOTOR_ACK;
+}
 
+char _arc(Tmotor *_motor_l, Tmotor *_motor_r, int dir, int angle)
+{
+    if (dir == RIGHT || dir == LEFT)
+    {
+        _encoder_read(_motor_l->encoder);
+        _encoder_read(_motor_r->encoder);
+        int last_R_position = _motor_r->encoder->counter;
+        int last_L_position = _motor_l->encoder->counter;
+
+        // int angle = 0;
+
+        if (dir == LEFT)
+        {
+            _set_speed(_motor_l, (ARC_SPEED * 8) / 10, !FORWARD);
+            _set_speed(_motor_r, ARC_SPEED, FORWARD);
+            while (_motor_r->encoder->counter < (last_R_position + angle * 2))
+            {
+                _encoder_read(_motor_r->encoder);
+            }
+        }
+        else
+        {
+            _set_speed(_motor_l, ARC_SPEED, !FORWARD);
+            _set_speed(_motor_r, (ARC_SPEED * 8) / 10, FORWARD);
+            while (_motor_l->encoder->counter < (last_L_position + angle * 2))
+            {
+                _encoder_read(_motor_l->encoder);
+            }
+        }
+    }
+
+    _stop_motor(_motor_r);
+    _stop_motor(_motor_l);
+    return MOTOR_ACK;
 }
 
 char _turn(Tmotor *_motor_l, Tmotor *_motor_r, int dir)
@@ -127,8 +155,8 @@ char _turn(Tmotor *_motor_l, Tmotor *_motor_r, int dir)
         int last_L_position = _motor_l->encoder->counter;
 
         // int angle = 0;
-        _set_speed(_motor_l, 250, (dir & __1BIT_LSB_MASK));
-        _set_speed(_motor_r, 250, (dir & (__1BIT_LSB_MASK << 2)));
+        _set_speed(_motor_l, TURN_SPEED, (dir & __1BIT_LSB_MASK));
+        _set_speed(_motor_r, TURN_SPEED, (dir & (__1BIT_LSB_MASK << 1)));
 
         if (dir == LEFT)
         {
@@ -146,7 +174,6 @@ char _turn(Tmotor *_motor_l, Tmotor *_motor_r, int dir)
         }
     }
 
-
     _stop_motor(_motor_r);
     _stop_motor(_motor_l);
     return MOTOR_ACK;
@@ -157,5 +184,3 @@ char _set_motor_faktor(Tmotor *_motor, int value)
     _motor->motor_speed_faktor = value;
     return MOTOR_ACK;
 }
-
-

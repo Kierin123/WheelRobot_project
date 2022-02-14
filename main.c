@@ -65,6 +65,18 @@ char task_handler(char *command)
 	}
 	break;
 
+	case ARC_RIGHT:
+	{
+		output = _arc(&LeftMotor, &RightMotor, RIGHT, _read_value);
+	}
+	break;
+
+	case ARC_LEFT:
+	{
+		output = _arc(&LeftMotor, &RightMotor, LEFT, _read_value);
+	}
+	break;
+
 	case EXIT:
 	{
 		if ((_stop_motor(&LeftMotor) == _ACK) && (_stop_motor(&RightMotor) == _ACK))
@@ -130,7 +142,6 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-
 	// ########################################
 	//     Motor setup
 	// ########################################
@@ -177,7 +188,7 @@ int main(int argc, char *argv[])
 					while (write_data[0] != _ACK)
 					{
 						write(*client_socket, write_data, strlen(write_data));
-						memset(write_data,'\0',WRITE_DATA_SIZE);
+						memset(write_data, '\0', WRITE_DATA_SIZE - 1);
 					}
 					if (write_data[0] == _EOF)
 					{
@@ -185,7 +196,7 @@ int main(int argc, char *argv[])
 					}
 					single_command = strtok(NULL, ",");
 				}
-				memset(read_data, '\0', READ_DATA_SIZE);
+				memset(read_data, '\0', READ_DATA_SIZE-1);
 			}
 
 			task_running = 0u;

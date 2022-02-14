@@ -118,6 +118,7 @@ DIST          = /../lib64/qt5/mkspecs/features/spec_pre.prf \
 		/../lib64/qt5/mkspecs/features/qt_config.prf \
 		/../lib64/qt5/mkspecs/linux-g++/qmake.conf \
 		/../lib64/qt5/mkspecs/features/spec_post.prf \
+		../WheelRobotComm/.qmake.stash \
 		/../lib64/qt5/mkspecs/features/exclusive_builds.prf \
 		/../lib64/qt5/mkspecs/features/toolchain.prf \
 		/../lib64/qt5/mkspecs/features/default_pre.prf \
@@ -210,6 +211,7 @@ Makefile: ../WheelRobotComm/WheelRobotComm.pro /../lib64/qt5/mkspecs/linux-g++/q
 		/../lib64/qt5/mkspecs/features/qt_config.prf \
 		/../lib64/qt5/mkspecs/linux-g++/qmake.conf \
 		/../lib64/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/../lib64/qt5/mkspecs/features/exclusive_builds.prf \
 		/../lib64/qt5/mkspecs/features/toolchain.prf \
 		/../lib64/qt5/mkspecs/features/default_pre.prf \
@@ -289,6 +291,7 @@ Makefile: ../WheelRobotComm/WheelRobotComm.pro /../lib64/qt5/mkspecs/linux-g++/q
 /../lib64/qt5/mkspecs/features/qt_config.prf:
 /../lib64/qt5/mkspecs/linux-g++/qmake.conf:
 /../lib64/qt5/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /../lib64/qt5/mkspecs/features/exclusive_builds.prf:
 /../lib64/qt5/mkspecs/features/toolchain.prf:
 /../lib64/qt5/mkspecs/features/default_pre.prf:
@@ -370,6 +373,8 @@ moc_client.cpp: ../WheelRobotComm/client.h \
 
 moc_mainwindow.cpp: ../WheelRobotComm/mainwindow.h \
 		../WheelRobotComm/client.h \
+		../WheelRobotComm/dialogsave.h \
+		../WheelRobotComm/dialogload.h \
 		moc_predefs.h \
 		/../lib64/qt5/bin/moc
 	/../lib64/qt5/bin/moc $(DEFINES) --include /home/kierin/Repo/Wheel_robot/ZUT_wheel_robot/WheelRobotComm/build-WheelRobotComm-Desktop-Debug/moc_predefs.h -I/../lib64/qt5/mkspecs/linux-g++ -I/home/kierin/Repo/Wheel_robot/ZUT_wheel_robot/WheelRobotComm/WheelRobotComm -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtNetwork -I/usr/include/qt5/QtCore -I. -I/usr/include/c++/10 -I/usr/include/c++/10/x86_64-redhat-linux -I/usr/include/c++/10/backward -I/usr/lib/gcc/x86_64-redhat-linux/10/include -I/usr/local/include -I/usr/include ../WheelRobotComm/mainwindow.h -o moc_mainwindow.cpp
@@ -399,11 +404,15 @@ client.o: ../WheelRobotComm/client.cpp ../WheelRobotComm/client.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o client.o ../WheelRobotComm/client.cpp
 
 main.o: ../WheelRobotComm/main.cpp ../WheelRobotComm/mainwindow.h \
-		../WheelRobotComm/client.h
+		../WheelRobotComm/client.h \
+		../WheelRobotComm/dialogsave.h \
+		../WheelRobotComm/dialogload.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../WheelRobotComm/main.cpp
 
 mainwindow.o: ../WheelRobotComm/mainwindow.cpp ../WheelRobotComm/mainwindow.h \
 		../WheelRobotComm/client.h \
+		../WheelRobotComm/dialogsave.h \
+		../WheelRobotComm/dialogload.h \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../WheelRobotComm/mainwindow.cpp
 

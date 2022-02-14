@@ -11,7 +11,7 @@
 #include "motors.h"
 #include "TCP.h"
 
-#define READ_DATA_SIZE 6
+#define READ_DATA_SIZE 300
 #define WRITE_DATA_SIZE 2
 #define _ACK 0x06
 #define _EOF 0x04
@@ -40,4 +40,6 @@ enum
     EXIT = 'E',
     CHANGE_FAKTOR_L = 'H',
     CHANGE_FAKTOR_R = 'G',
+    ARC_RIGHT = 'W',
+    ARC_LEFT = 'Q',
 };
