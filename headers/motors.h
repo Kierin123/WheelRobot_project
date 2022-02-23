@@ -26,10 +26,11 @@
 //      Magic numbers, and constants
 // ########################################
 
-#define TURN_90_DEGREE      165
+#define TURN_90_DEGREE      180
 #define DISTANCE_ENC_FACTOR 65 / 200 
-#define TURN_SPEED          250
+#define TURN_SPEED          300
 #define ARC_SPEED           350
+#define DISTANCE_MOVE_SPEED 350
 
 #define MOTOR_ACK 0x06
 

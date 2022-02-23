@@ -6,9 +6,6 @@
 #include <QDir>
 #include <QDebug>
 
-
-
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -22,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(client, &Client::ReadDone, this, &MainWindow::ReceivedData);
     connect(client, &Client::StatusChanged, this, &MainWindow::LabelStatusChange);
-
 }
 
 
@@ -51,7 +47,7 @@ void MainWindow::LabelStatusChange(int status)
 void MainWindow::ReceivedData(QString msg)
 {
     ui->textEditComm->append(msg);
-//    answer = msg;
+    //    answer = msg;
 }
 
 void MainWindow::GotError(QAbstractSocket::SocketError error)
@@ -103,10 +99,6 @@ void MainWindow::on_pushButtonSend_clicked()
     output.writeRawData(str.toStdString().c_str(), strlen(str.toStdString().c_str()));
 }
 
-void MainWindow::on_pushButtonSearch_clicked()
-{
-
-}
 
 //####################################################
 //          EDIT commands
@@ -114,104 +106,45 @@ void MainWindow::on_pushButtonSearch_clicked()
 
 void MainWindow::on_pushButtonForwardDistance_clicked()
 {
-    Command TemporaryCommand;
-    QString StrCommand;
-    StrCommand.push_back(FORWARD_DISTANCE);
-    StrCommand.push_back( ui->lineEditDistance->text());
-    StrCommand.push_back(',');
-    TemporaryCommand.CommandToSend = StrCommand;
-    TemporaryCommand.CommandName = ("Forward " + ui->lineEditDistance->text() + " mm");
-    CommandVect.push_back(TemporaryCommand);
-    ui->listWidget->addItem((CommandVect.end()-1)->CommandName);
+    AddCommandToVector(FORWARD_DISTANCE, ui->lineEditDistance->text());
+    ui->listWidget->addItem(CommandVect.getLast().getCommandName());
 }
 
 void MainWindow::on_pushButtonBackwardDistance_clicked()
 {
-    Command TemporaryCommand;
-    QString StrCommand;
-    StrCommand.push_back(BACKWARD_DISTANCE);
-    StrCommand.push_back( ui->lineEditDistance->text());
-    StrCommand.push_back(',');
-    TemporaryCommand.CommandToSend = StrCommand;
-    TemporaryCommand.CommandName = ("Backward " + ui->lineEditDistance->text() + " mm");
-    CommandVect.push_back(TemporaryCommand);
-    ui->listWidget->addItem((CommandVect.end()-1)->CommandName);
-}
-
-void MainWindow::on_pushButtonForwardSpeed_clicked()
-{
-
-}
-
-void MainWindow::on_pushButtonBackwardSpeed_clicked()
-{
-
+    AddCommandToVector(BACKWARD_DISTANCE, ui->lineEditDistance->text());
+    ui->listWidget->addItem(CommandVect.getLast().getCommandName());
 }
 
 void MainWindow::on_pushButtonTurnLeft_clicked()
 {
-    Command TemporaryCommand;
-    QString StrCommand;
-    StrCommand.push_back(TURN_LEFT);
-    StrCommand.push_back("000,");
-    TemporaryCommand.CommandToSend = StrCommand;
-    TemporaryCommand.CommandName = ("Rotate Left");
-    CommandVect.push_back(TemporaryCommand);
-    ui->listWidget->addItem((CommandVect.end()-1)->CommandName);
-
+    AddCommandToVector(TURN_LEFT, QString("000"));
+    ui->listWidget->addItem(CommandVect.getLast().getCommandName());
 }
 
 void MainWindow::on_pushButtonTurnRight_clicked()
 {
-    Command TemporaryCommand;
-    QString StrCommand;
-    StrCommand.push_back(TURN_RIGHT);
-    StrCommand.push_back("000,");
-    TemporaryCommand.CommandToSend = StrCommand;
-    TemporaryCommand.CommandName = ("Rotate right");
-    CommandVect.push_back(TemporaryCommand);
-    ui->listWidget->addItem((CommandVect.end()-1)->CommandName);
-
+    AddCommandToVector(TURN_RIGHT, QString("000"));
+    ui->listWidget->addItem(CommandVect.getLast().getCommandName());
 }
 
 void MainWindow::on_pushButtonMotorRight_clicked()
 {
-    Command TemporaryCommand;
-    QString StrCommand;
-    StrCommand.push_back(MOTOR_RIGHT);
-    StrCommand.push_back(ui->lineEditSpeed->text());
-    StrCommand.push_back(',');
-    TemporaryCommand.CommandToSend = StrCommand;
-    TemporaryCommand.CommandName = ("Motor Right " + ui->lineEditSpeed->text());
-    CommandVect.push_back(TemporaryCommand);
-    ui->listWidget->addItem((CommandVect.end()-1)->CommandName);
-
+    AddCommandToVector(MOTOR_RIGHT, ui->lineEditSpeed->text());
+    ui->listWidget->addItem(CommandVect.getLast().getCommandName());
 }
 
 void MainWindow::on_pushButtonMotorLeft_clicked()
 {
-    Command TemporaryCommand;
-    QString StrCommand;
-    StrCommand.push_back(MOTOR_LEFT);
-    StrCommand.push_back(ui->lineEditSpeed->text());
-    StrCommand.push_back(',');
-    TemporaryCommand.CommandToSend = StrCommand;
-    TemporaryCommand.CommandName = ("Motor Left " + ui->lineEditSpeed->text());
-    CommandVect.push_back(TemporaryCommand);
-    ui->listWidget->addItem((CommandVect.end()-1)->CommandName);
-
+    AddCommandToVector(MOTOR_LEFT, ui->lineEditSpeed->text());
+    ui->listWidget->addItem(CommandVect.getLast().getCommandName());
 }
 
 void MainWindow::on_pushButtonStop_clicked()
 {
-    Command TemporaryCommand;
-    QString StrCommand;
-    StrCommand.push_back(STOP);
-    StrCommand.push_back("000,");
-    TemporaryCommand.CommandToSend = StrCommand;
-    TemporaryCommand.CommandName = "Stop";
-    CommandVect.push_back(TemporaryCommand);
-    ui->listWidget->addItem((CommandVect.end()-1)->CommandName);
+
+    AddCommandToVector(STOP, QString("000"));
+    ui->listWidget->addItem(CommandVect.getLast().getCommandName());
 
 }
 
@@ -228,8 +161,7 @@ void MainWindow::on_pushButtonSend_2_clicked()
     QDataStream outputStream(client->SocketDesc);
 
     for (auto &var : CommandVect) {
-        SendData(var.CommandToSend.toStdString().c_str(), strlen(var.CommandToSend.toStdString().c_str()));
-        //        SendData(var.toStdString().c_str(), strlen(var.toStdString().c_str()));
+        SendData(var.getCommand().toStdString().c_str(), strlen(var.getCommand().toStdString().c_str()));
     }
     CommandVect.clear();
     ui->listWidget->clear();
@@ -238,30 +170,34 @@ void MainWindow::on_pushButtonSend_2_clicked()
 
 void MainWindow::on_pushButtonArcLeft_clicked()
 {
-    Command TemporaryCommand;
-    QString StrCommand;
-    StrCommand.push_back(ARC_LEFT);
-    StrCommand.push_back(ui->lineEditArc->text());
-    StrCommand.push_back(",");
-    TemporaryCommand.CommandToSend = StrCommand;
-    TemporaryCommand.CommandName = ("Arc left " + ui->lineEditArc->text() + " deg");
-    CommandVect.push_back(TemporaryCommand);
-    ui->listWidget->addItem((CommandVect.end()-1)->CommandName);
-
+    AddCommandToVector(ARC_LEFT, ui->lineEditArc->text());
+    ui->listWidget->addItem(CommandVect.getLast().getCommandName());
 }
 
 void MainWindow::on_pushButtonArcRight_clicked()
 {
-    Command TemporaryCommand;
-    QString StrCommand;
-    StrCommand.push_back(ARC_RIGHT);
-    StrCommand.push_back(ui->lineEditArc->text());
-    StrCommand.push_back(",");
-    TemporaryCommand.CommandToSend = StrCommand;
-    TemporaryCommand.CommandName = ("Arc right " + ui->lineEditArc->text() + " deg");
-    CommandVect.push_back(TemporaryCommand);
-    ui->listWidget->addItem((CommandVect.end()-1)->CommandName);
+    AddCommandToVector(ARC_RIGHT, ui->lineEditArc->text());
+    ui->listWidget->addItem(CommandVect.getLast().getCommandName());
 }
+
+void MainWindow::AddCommandToVector(char prefixCommand, QString valueCommand)
+{
+    Command temporaryCommand;
+    QString nameToAdd = "";
+    QString commandToAdd = "";
+    for (auto commandArrayIt : availableCommandArray) {
+        if(prefixCommand == commandArrayIt.getCommand()[0])
+        {
+            nameToAdd = commandArrayIt.getCommandName();
+            commandToAdd += prefixCommand + valueCommand + ",";
+            break;
+        }
+    }
+    temporaryCommand.setCommand(commandToAdd);
+    temporaryCommand.setCommandName(nameToAdd);
+    CommandVect.pushBack(temporaryCommand);
+}
+
 
 void MainWindow::on_pushButton_clicked()
 {
@@ -297,7 +233,7 @@ void MainWindow::on_pushButtonLoadFile_clicked()
             {
 
                 ui->listWidget->addItem(TemporaryCommand.getCommandName());
-                CommandVect.push_back(TemporaryCommand);
+                CommandVect.pushBack(TemporaryCommand);
             }
         }
     }
@@ -305,24 +241,24 @@ void MainWindow::on_pushButtonLoadFile_clicked()
 
 void MainWindow::on_pushButtonSaveFile_clicked()
 {
-        QString fileName = QFileDialog::getSaveFileName(this,
-                                                        tr("Save Address Book"), "",
-                                                        tr("All Files (*)"));
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                                    tr("Save Address Book"), "",
+                                                    tr("All Files (*)"));
 
-        if (fileName.isEmpty())
+    if (fileName.isEmpty())
+        return;
+    else {
+        QFile file(fileName);
+        if (!file.open(QIODevice::WriteOnly)) {
+            QMessageBox::information(this, tr("Unable to open file"),
+                                     file.errorString());
             return;
-        else {
-            QFile file(fileName);
-            if (!file.open(QIODevice::WriteOnly)) {
-                QMessageBox::information(this, tr("Unable to open file"),
-                                         file.errorString());
-                return;
-            }
-            for (auto commandIndex : CommandVect) {
-                file.write(commandIndex.getCommand().toStdString().c_str(), commandIndex.getCommand().toStdString().length());
-                file.write("\n",1);
-            }
         }
+        for (auto commandIndex : CommandVect) {
+            file.write(commandIndex.getCommand().toStdString().c_str(), commandIndex.getCommand().toStdString().length());
+            file.write("\n",1);
+        }
+    }
 }
 
 Command MainWindow::isCommandAvailable(QString inputString)
@@ -334,7 +270,7 @@ Command MainWindow::isCommandAvailable(QString inputString)
             {
                 if(checkColonOnPlace(inputString,4))
                 {
-                    return Command(arrayIndex.getCommand(), arrayIndex.getCommandName());
+                    return Command(inputString, arrayIndex.getCommandName());
                 } else{}
             } else{}
         } else{}
@@ -369,13 +305,27 @@ bool MainWindow::checkColonOnPlace(QString strToCheck, quint32 positionToCheck)
     return output;
 }
 
-void MainWindow::clearCommandVector()
+//void MainWindow::clearCommandVector()
+//{
+//    CommandVect.clear();
+//    ui->listWidget->clear();
+//}
+
+void MainWindow::on_pushButtonClearCommand_clicked()
 {
+//    clearCommandVector();
     CommandVect.clear();
     ui->listWidget->clear();
 }
 
-void MainWindow::on_pushButtonClearCommand_clicked()
+void MainWindow::on_pushButtonMotorLeftFactor_clicked()
 {
-    clearCommandVector();
+    AddCommandToVector(CHANGE_FAKTOR_L, ui->lineEditFactor->text());
+    ui->listWidget->addItem(CommandVect.getLast().getCommandName());
+}
+
+void MainWindow::on_pushButtonMotorRightFactor_clicked()
+{
+    AddCommandToVector(CHANGE_FAKTOR_R, ui->lineEditFactor->text());
+    ui->listWidget->addItem(CommandVect.getLast().getCommandName());
 }

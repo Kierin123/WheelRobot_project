@@ -38,8 +38,8 @@ enum
     MOTOR_LEFT = 'M',
     MOTOR_RIGHT = 'N',
     EXIT = 'E',
-    CHANGE_FAKTOR_L = 'H',
-    CHANGE_FAKTOR_R = 'G',
+    CHANGE_FAKTOR_L = 'G',
+    CHANGE_FAKTOR_R = 'H',
     ARC_RIGHT = 'W',
     ARC_LEFT = 'Q',
 };

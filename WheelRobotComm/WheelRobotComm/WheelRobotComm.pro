@@ -10,11 +10,13 @@ CONFIG += c++11
 
 SOURCES += \
     client.cpp \
+    command.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     client.h \
+    command.h \
     mainwindow.h
 
 FORMS += \
